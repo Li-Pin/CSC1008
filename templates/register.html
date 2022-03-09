@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div align="center">
+        <h1>Register an Account</h1>
+    </div>
+    <br/>
+    <form id="centerRegister" method="POST">
+          <br/>
+          <label for="username">Username:</label>
+              <input type="text" class="form-control" id="username"><br/>
+          <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password"><br/>
+          <label for="password2">Re-enter Password:</label>
+                <input type="password" class="form-control" id="password2"><br/>
+          <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email"><br/><br/>
+          <button type="button" class="btn btn-outline-info">Register</button>
+    </form>
+
+
+{% endblock %}

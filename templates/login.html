@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if username %}
+    <h1>Hello {{ username }}!</h1>
+{% else %}
+    <div align="center">
+        <h1>Lift Ride Hailing</h1>
+    </div>
+    <br/>
+    <div align="center">
+        <img src="../static/Images/pngegg.png" width="400" height="280">
+    </div>
+    <form id="centerLogin" method="POST">
+          <br/>
+          <label for="username">Username:</label>
+          <input type="text" class="form-control" id="username"><br/>
+          <label for="password">Password:</label>
+          <input type="password" class="form-control" id="password"><br/>
+          <a href="/register">Not a user? Register here</a><br/><br/>
+          <button type="button" class="btn btn-outline-info">Login</button>
+    </form>
+{% endif %}
+
+{% endblock %}
