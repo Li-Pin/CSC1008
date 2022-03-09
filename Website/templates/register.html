@@ -6,17 +6,18 @@
         <h1>Register an Account</h1>
     </div>
     <br/>
+    <script type="text/javascript" src="./static/script.js"></script>
     <form id="centerRegister" method="POST">
           <br/>
           <label for="username">Username:</label>
-              <input type="text" class="form-control" id="username" name="username"><br/>
+              <input type="text" class="form-control" id="username" name="username" required><br/>
           <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password"><br/>
+                <input type="password" class="form-control" id="password" name="password" required><br/>
           <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email"><br/><br/>
+                <input type="email" class="form-control" id="email" name="email" required><br/><br/>
 
 
-          <button type="submit" class="btn btn-outline-info">Register</button>
+          <button type="submit" onclick="myFunction()" class="btn btn-outline-info">Register</button>
     </form>
 
 
