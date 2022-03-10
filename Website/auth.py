@@ -27,4 +27,11 @@ def sign_up():
         db.session.add(new_user)
         db.session.commit()
 
+        return redirect(url_for("auth.login"))
+
     return render_template("register.html")
+
+
+@auth.route('/home', methods=['GET', 'POST'])
+def home():
+    return render_template("home.html")

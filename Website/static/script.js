@@ -1,4 +1,4 @@
-function myFunction() {
+function registerSuccess() {
     alert("Account created successfully!")
 }
 

@@ -7,7 +7,7 @@
     </div>
     <br/>
     <script type="text/javascript" src="./static/script.js"></script>
-    <form id="centerRegister" method="POST">
+    <form id="centerRegister" method="POST" onsubmit="registerSuccess()">
           <br/>
           <label for="username">Username:</label>
               <input type="text" class="form-control" id="username" name="username" required><br/>
@@ -17,7 +17,7 @@
                 <input type="email" class="form-control" id="email" name="email" required><br/><br/>
 
 
-          <button type="submit" onclick="myFunction()" class="btn btn-outline-info">Register</button>
+          <button type="submit" class="btn btn-outline-info">Register</button>
     </form>
 
 
