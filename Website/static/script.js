@@ -1,4 +1,4 @@
-function registerSuccess() {
-    alert("Account created successfully!")
-}
+// function registerSuccess() {
+//     alert("Account created successfully!")
+// }
 

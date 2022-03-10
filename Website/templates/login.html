@@ -10,8 +10,15 @@
     </div>
     <br/>
     <div align="center">
-        <img src="../static/Images/pngegg.png" width="400" height="280">
+        <img src="../static/Images/pngegg.png" width="280" height="200">
     </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div id="loginError" class="notification is-danger">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
     <form id="centerLogin" method="POST">
           <br/>
           <label for="username">Username:</label>

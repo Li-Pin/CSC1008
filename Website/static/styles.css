@@ -21,3 +21,25 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+#emailError{
+    color: #ba3939;
+    background: #ffe0e0;
+    border: 1px solid #a33a3a;
+    width: 400px;
+    height: 30px;
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 355px;
+}
+
+#loginError{
+    color: #ba3939;
+    background: #ffe0e0;
+    border: 1px solid #a33a3a;
+    width: 400px;
+    height: 30px;
+    text-align: center;
+    margin-top: 25px;
+    margin-left: 355px;
+}

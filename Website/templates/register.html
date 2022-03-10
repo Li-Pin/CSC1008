@@ -5,19 +5,26 @@
     <div align="center">
         <h1>Register an Account</h1>
     </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="emailError" class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+    {% endif %}
+    {% endwith %}
     <br/>
     <script type="text/javascript" src="./static/script.js"></script>
-    <form id="centerRegister" method="POST" onsubmit="registerSuccess()">
-          <br/>
-          <label for="username">Username:</label>
-              <input type="text" class="form-control" id="username" name="username" required><br/>
-          <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required><br/>
-          <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required><br/><br/>
+    <form id="centerRegister" method="POST">
+        <br/>
+        <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required><br/>
+        <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required><br/>
+        <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required><br/><br/>
 
 
-          <button type="submit" class="btn btn-outline-info">Register</button>
+        <button type="submit" class="btn btn-outline-info">Register</button>
     </form>
 
 
