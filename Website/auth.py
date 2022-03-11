@@ -21,8 +21,8 @@ def login_post():
 
     #check if user exists
     #if user don't exist, prompt user to try again
-    if not user and not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
+    if not user or not check_password_hash(user.password, password):
+        flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.login'))
     # if user exists, log user in
     login_user(user)
@@ -41,14 +41,14 @@ def register():
 
         #if there is an existing user, prompt user to try again
         if user:
-            flash('Email address already exist, please use another email.')
+            flash('Email address already exist, please use another email.', 'danger')
             return redirect(url_for('auth.register'))
 
         new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email)
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Registration Success!')
+        flash('Registration Success!', 'success')
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")

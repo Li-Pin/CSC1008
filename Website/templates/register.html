@@ -5,14 +5,16 @@
     <div align="center">
         <h1>Register an Account</h1>
     </div>
-    {% with messages = get_flashed_messages() %}
+    <br/>
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div id="emailError">
-            {{ messages[0] }}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mb-3" role="alert" id="alert">
+            {{ message }}
         </div>
+        {% endfor %}
     {% endif %}
     {% endwith %}
-    <br/>
     <script type="text/javascript" src="./static/script.js"></script>
     <form id="centerRegister" method="POST">
         <br/>
