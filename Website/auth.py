@@ -17,12 +17,11 @@ def login():
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
-
     user = User.query.filter_by(username=username).first()
 
     #check if user exists
     #if user don't exist, prompt user to try again
-    if not user or not check_password_hash(user.password, password):
+    if not user and not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     # if user exists, log user in
@@ -49,6 +48,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
+        flash('Registration Success!')
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
