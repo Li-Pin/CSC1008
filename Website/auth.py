@@ -2,7 +2,8 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from . import db
-from .models import User
+from .models import User, Rides
+from oneMapMethods import locationdet
 
 
 auth = Blueprint('auth', __name__)
@@ -57,3 +58,35 @@ def register():
 @auth.route('/home', methods=['GET', 'POST'])
 def home():
     return render_template("home.html")
+
+@auth.route('/bookride', methods=['GET', 'POST'])
+def bookride():
+    if request.method == 'POST':
+        fromLocation = request.form.get('fromLocation') #Taking input from form
+        toLocation = request.form.get('toLocation')
+        fromLocation = locationdet(fromLocation) #Passing to API
+        toLocation = locationdet(toLocation)
+        fromLocationlat = fromLocation[0] #Assigning array values
+        fromLocationlong = fromLocation[1]
+        toLocationlat = toLocation[0]
+        toLocationlong = toLocation[1]
+        fromLocationname = fromLocation[2]
+        toLocationname = toLocation [2]
+
+
+        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+
+    return render_template("bookride.html")
+
+@auth.route('/confirmride', methods=['GET', 'POST'])
+def confirmride():
+    fromLocationlat = request.args.get('fromLocationlat', None)
+    fromLocationlong = request.args.get('fromLocationlong', None)
+    toLocationlat = request.args.get('toLocationlat', None)
+    toLocationlong = request.args.get('toLocationlong', None)
+    fromLocationname = request.args.get('fromLocationname', None)
+    toLocationname = request.args.get('toLocationname', None)
+
+    return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
