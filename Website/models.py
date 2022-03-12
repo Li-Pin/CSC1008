@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(80), unique=True)
     rides = db.relationship('Rides')
 
+
 class Rides(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     fromLocation = db.Column(db.Float(100))

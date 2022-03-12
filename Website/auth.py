@@ -59,6 +59,7 @@ def register():
 def home():
     return render_template("home.html")
 
+
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
     if request.method == 'POST':
