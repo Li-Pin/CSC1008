@@ -39,7 +39,7 @@
     margin-left: 355px;
 }
 
-#welcome{
+#welcome, #settingstitle{
     margin-top: 20px;
 }
 
@@ -51,7 +51,7 @@
 
 }
 
-#bookride{
+#bookride, #editprofile{
     width: 220px;
     height: 120px;
     margin-right: 10px;
@@ -60,7 +60,7 @@
     font-size: 1.5em;
 }
 
-#booksharedride{
+#booksharedride, #savedlocations{
     width: 220px;
     height: 120px;
     padding-top: 40px;
@@ -68,7 +68,7 @@
     font-size: 1.5em;
 }
 
-#myrides{
+#myrides, #sendfeedback{
     width: 220px;
     height: 120px;
     margin-right: 10px;
@@ -78,7 +78,7 @@
     font-size: 1.5em;
 }
 
-#settings{
+#settings, #helpcentre{
     width: 220px;
     height: 120px;
     padding-top: 40px;

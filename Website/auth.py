@@ -80,6 +80,7 @@ def bookride():
 
     return render_template("bookride.html")
 
+
 @auth.route('/confirmride', methods=['GET', 'POST'])
 def confirmride():
     fromLocationlat = request.args.get('fromLocationlat', None)
@@ -91,3 +92,8 @@ def confirmride():
 
     return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
         toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
+
+
+@auth.route('/settings')
+def settings():
+    return render_template("settings.html")
