@@ -9,6 +9,7 @@ from oneMapMethods import locationdet
 auth = Blueprint('auth', __name__)
 
 
+#Route to login page
 @auth.route('/')
 def login():
     return render_template('login.html')
@@ -30,6 +31,7 @@ def login_post():
     return redirect(url_for('auth.home'))
 
 
+#Route to register page
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -55,11 +57,13 @@ def register():
     return render_template("register.html")
 
 
+#Route to homepage
 @auth.route('/home', methods=['GET', 'POST'])
 def home():
     return render_template("home.html")
 
 
+#Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
     if request.method == 'POST':
@@ -73,7 +77,6 @@ def bookride():
         toLocationlong = toLocation[1]
         fromLocationname = fromLocation[2]
         toLocationname = toLocation [2]
-
 
         return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
         toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))

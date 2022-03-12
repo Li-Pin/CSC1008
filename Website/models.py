@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy import func
 
 
+#user database
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
@@ -11,6 +12,7 @@ class User(UserMixin, db.Model):
     rides = db.relationship('Rides')
 
 
+#rides database
 class Rides(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     fromLocation = db.Column(db.Float(100))
