@@ -39,28 +39,50 @@
     margin-left: 355px;
 }
 
-#homepage{
-    
+#welcome{
+    margin-top: 20px;
+}
+
+.col-sm-12 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 100px;
+
 }
 
 #bookride{
     width: 220px;
     height: 120px;
+    margin-right: 10px;
+    padding-top: 40px;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 #booksharedride{
     width: 220px;
     height: 120px;
+    padding-top: 40px;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 #myrides{
     width: 220px;
     height: 120px;
-    margin-top: 150px;
+    margin-right: 10px;
+    margin-top: -90px;
+    padding-top: 40px;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 #settings{
     width: 220px;
     height: 120px;
-    margin-top: 100px;
+    padding-top: 40px;
+    margin-top: -90px;
+    text-align: center;
+    font-size: 1.5em;
 }
