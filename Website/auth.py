@@ -69,6 +69,7 @@ def bookride():
     if request.method == 'POST':
         fromLocation = request.form.get('fromLocation') #Taking input from form
         toLocation = request.form.get('toLocation')
+        date = request.form.get('date')
         fromLocation = locationdet(fromLocation) #Passing to API
         toLocation = locationdet(toLocation)
         fromLocationlat = fromLocation[0] #Assigning array values
