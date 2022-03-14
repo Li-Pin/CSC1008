@@ -84,6 +84,27 @@ def bookride():
 
     return render_template("bookride.html")
 
+#Route to book shared ride page
+@auth.route('/booksharedride', methods=['GET', 'POST'])
+def booksharedride():
+    if request.method == 'POST':
+        fromLocation = request.form.get('fromLocation') #Taking input from form
+        toLocation = request.form.get('toLocation')
+        date = request.form.get('date')
+        fromLocation = locationdet(fromLocation) #Passing to API
+        toLocation = locationdet(toLocation)
+        fromLocationlat = fromLocation[0] #Assigning array values
+        fromLocationlong = fromLocation[1]
+        toLocationlat = toLocation[0]
+        toLocationlong = toLocation[1]
+        fromLocationname = fromLocation[2]
+        toLocationname = toLocation [2]
+
+        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+
+    return render_template("booksharedride.html")
+
 
 @auth.route('/confirmride', methods=['GET', 'POST'])
 def confirmride():
@@ -96,6 +117,20 @@ def confirmride():
 
     return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
         toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
+
+@auth.route('/confirmsharedride', methods=['GET', 'POST'])
+def confirmsharedride():
+    fromLocationlat = request.args.get('fromLocationlat', None)
+    fromLocationlong = request.args.get('fromLocationlong', None)
+    toLocationlat = request.args.get('toLocationlat', None)
+    toLocationlong = request.args.get('toLocationlong', None)
+    fromLocationname = request.args.get('fromLocationname', None)
+    toLocationname = request.args.get('toLocationname', None)
+
+    return render_template("confirmsharedride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
+
+
 
 
 @auth.route('/settings')
