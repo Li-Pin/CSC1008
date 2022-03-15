@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
     email = db.Column(db.String(80), unique=True)
-    rides = db.relationship('Rides')
+    # rides = db.relationship('Rides')
 
 
 # rides database
@@ -24,10 +24,10 @@ class Rides(db.Model):
 # Book single ride database
 class BookRide(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    PickUp = db.Column(db.String(100))
-    DropOff = db.Column(db.String(100))
-    date = db.Column(db.Date)
-    time = db.Column(db.Time)
+    pickUp = db.Column(db.String(100))
+    dropOff = db.Column(db.String(100))
+    date = db.Column(db.String(100))
+    time = db.Column(db.String(100))
     pax = db.column(db.Integer)
     CarType = db.column(db.String(100))
     Payment = db.column(db.String(100))

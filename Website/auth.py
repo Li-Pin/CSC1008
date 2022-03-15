@@ -66,21 +66,18 @@ def home():
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
     if request.method == 'POST':
-        fromLocation = request.form.get('fromLocation')  # Taking input from form
-        toLocation = request.form.get('toLocation')
+        pickUp = request.form.get('pickUp')
+        dropOff = request.form.get('dropOff')
         date = request.form.get('date')
-        fromLocation = locationdet(fromLocation)  # Passing to API
-        toLocation = locationdet(toLocation)
-        fromLocationlat = fromLocation[0]  # Assigning array values
-        fromLocationlong = fromLocation[1]
-        toLocationlat = toLocation[0]
-        toLocationlong = toLocation[1]
-        fromLocationname = fromLocation[2]
-        toLocationname = toLocation[2]
+        time = request.form.get('time')
+        pax = request.form.get('pax')
+        CarType = request.form.get('CarType')
 
-        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                                fromLocationname=fromLocationname, toLocationname=toLocationname))
+        new_ride = BookRide(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType)
+        db.session.add(new_ride)
+        db.session.commit()
+        return redirect(
+            url_for('auth.confirmride', pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType))
 
     return render_template("bookride.html")
 

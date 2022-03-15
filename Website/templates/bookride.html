@@ -8,13 +8,26 @@
     <form id=centerRegister method="POST">
         <br/>
         <label >Pick up:</label>
-                <input type="text" class="form-control" name="fromLocation" required><br/>
+                <input type="text" class="form-control" name="pickUp" required><br/>
         <label >Drop Off:</label>
-                <input type="text" class="form-control"  name="toLocation" required><br/>
+                <input type="text" class="form-control"  name="dropOff" required><br/>
         <label >Date:</label>
                 <input type="date" class="form-control"  name="date" required><br/>
         <label >Time:</label>
                 <input type="time" class="form-control"  name="time" required><br/>
+        <label for="CarType" >Car type:</label>
+        <select name="CarType" id="CarType">
+        <option value="volvo">Volvo</option>
+        <option value="hyundai">Hyundai</option>
+        <option value="toyota">Toyota</option>
+        <option value="chevrolet">Chevrolet</option>
+        </select> <label >Pax:</label>
+                <select name="pax" id="pax">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option></select><br/>
 
         <!--<label >Email:</label>
             <input  class="form-control"  name="email" required><br/><br/>
