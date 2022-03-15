@@ -26,22 +26,22 @@ class BookRide(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     PickUp = db.Column(db.String(100))
     DropOff = db.Column(db.String(100))
-    date = db.Column(db.date)
-    time = db.Column(db.time)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
     pax = db.column(db.Integer)
     CarType = db.column(db.String(100))
     Payment = db.column(db.String(100))
 
 
 # Book shared ride database
-class BookRide(UserMixin, db.Model):
+class BookSharedRide(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     FirstPickUp = db.Column(db.String(100))
     SecondPickUp = db.Column(db.String(100))
     FirstDropOff = db.Column(db.String(100))
     FinalDropOff = db.Column(db.String(100))
-    date = db.Column(db.date)
-    time = db.Column(db.time)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
     pax = db.column(db.Integer)
     CarType = db.column(db.String(100))
     Payment = db.column(db.String(100))

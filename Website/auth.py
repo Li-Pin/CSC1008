@@ -2,14 +2,13 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from . import db
-from .models import User, Rides
+from .models import User, Rides, BookRide, BookSharedRide
 from oneMapMethods import locationdet
-
 
 auth = Blueprint('auth', __name__)
 
 
-#Route to login page
+# Route to login page
 @auth.route('/')
 def login():
     return render_template('login.html')
@@ -21,8 +20,8 @@ def login_post():
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
 
-    #check if user exists
-    #if user don't exist, prompt user to try again
+    # check if user exists
+    # if user don't exist, prompt user to try again
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.login'))
@@ -31,7 +30,7 @@ def login_post():
     return redirect(url_for('auth.home'))
 
 
-#Route to register page
+# Route to register page
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -39,10 +38,10 @@ def register():
         password = request.form.get('password')
         email = request.form.get('email')
 
-        #if it returns a user, there is already an existing user with the same email
+        # if it returns a user, there is already an existing user with the same email
         user = User.query.filter_by(email=email).first()
 
-        #if there is an existing user, prompt user to try again
+        # if there is an existing user, prompt user to try again
         if user:
             flash('Email address already exist, please use another email.', 'danger')
             return redirect(url_for('auth.register'))
@@ -57,51 +56,54 @@ def register():
     return render_template("register.html")
 
 
-#Route to homepage
+# Route to homepage
 @auth.route('/home', methods=['GET', 'POST'])
 def home():
     return render_template("home.html")
 
 
-#Route to book ride page
+# Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
     if request.method == 'POST':
-        fromLocation = request.form.get('fromLocation') #Taking input from form
+        fromLocation = request.form.get('fromLocation')  # Taking input from form
         toLocation = request.form.get('toLocation')
         date = request.form.get('date')
-        fromLocation = locationdet(fromLocation) #Passing to API
+        fromLocation = locationdet(fromLocation)  # Passing to API
         toLocation = locationdet(toLocation)
-        fromLocationlat = fromLocation[0] #Assigning array values
+        fromLocationlat = fromLocation[0]  # Assigning array values
         fromLocationlong = fromLocation[1]
         toLocationlat = toLocation[0]
         toLocationlong = toLocation[1]
         fromLocationname = fromLocation[2]
-        toLocationname = toLocation [2]
+        toLocationname = toLocation[2]
 
         return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+                                fromLocationname=fromLocationname, toLocationname=toLocationname))
 
     return render_template("bookride.html")
 
-#Route to book shared ride page
+
+# Route to book shared ride page
 @auth.route('/booksharedride', methods=['GET', 'POST'])
 def booksharedride():
     if request.method == 'POST':
-        fromLocation = request.form.get('fromLocation') #Taking input from form
+        fromLocation = request.form.get('fromLocation')  # Taking input from form
         toLocation = request.form.get('toLocation')
         date = request.form.get('date')
-        fromLocation = locationdet(fromLocation) #Passing to API
+        fromLocation = locationdet(fromLocation)  # Passing to API
         toLocation = locationdet(toLocation)
-        fromLocationlat = fromLocation[0] #Assigning array values
+        fromLocationlat = fromLocation[0]  # Assigning array values
         fromLocationlong = fromLocation[1]
         toLocationlat = toLocation[0]
         toLocationlong = toLocation[1]
         fromLocationname = fromLocation[2]
-        toLocationname = toLocation [2]
+        toLocationname = toLocation[2]
 
         return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+                                fromLocationname=fromLocationname, toLocationname=toLocationname))
 
     return render_template("booksharedride.html")
 
@@ -116,7 +118,9 @@ def confirmride():
     toLocationname = request.args.get('toLocationname', None)
 
     return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
+                           toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+                           fromLocationname=fromLocationname, toLocationname=toLocationname)
+
 
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 def confirmsharedride():
@@ -128,9 +132,8 @@ def confirmsharedride():
     toLocationname = request.args.get('toLocationname', None)
 
     return render_template("confirmsharedride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname)
-
-
+                           toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+                           fromLocationname=fromLocationname, toLocationname=toLocationname)
 
 
 @auth.route('/settings')
