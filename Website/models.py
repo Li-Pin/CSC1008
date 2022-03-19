@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy import func
+from datetime import datetime
 
 
 # user database
@@ -12,6 +13,18 @@ class User(UserMixin, db.Model):
     # rides = db.relationship('Rides')
 
 
+# user database
+class TEST_ride(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pickUp = db.Column(db.String(80))
+    dropOff = db.Column(db.String(80))
+    date = db.Column(db.String(100))
+    time = db.Column(db.String(80))
+    pax = db.Column(db.String(80))
+    carType = db.Column(db.String(80))
+
+
+
 # rides database
 class Rides(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,18 +32,6 @@ class Rides(db.Model):
     toLocation = db.Column(db.Float(100))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-
-
-# Book single ride database
-class BookRide(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    pickUp = db.Column(db.String(100))
-    dropOff = db.Column(db.String(100))
-    date = db.Column(db.String(100))
-    time = db.Column(db.String(100))
-    pax = db.column(db.Integer)
-    CarType = db.column(db.String(100))
-    Payment = db.column(db.String(100))
 
 
 # Book shared ride database

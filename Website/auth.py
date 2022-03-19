@@ -1,9 +1,12 @@
+import datetime
+
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from . import db
-from .models import User, Rides, BookRide, BookSharedRide
+from .models import User, TEST_ride
 from oneMapMethods import locationdet
+
 
 auth = Blueprint('auth', __name__)
 
@@ -62,6 +65,7 @@ def home():
     return render_template("home.html")
 
 
+
 # Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
@@ -71,14 +75,14 @@ def bookride():
         date = request.form.get('date')
         time = request.form.get('time')
         pax = request.form.get('pax')
-        CarType = request.form.get('CarType')
-
-        new_ride = BookRide(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType)
-        db.session.add(new_ride)
+        carType = request.form.get('carType')
+        Book_Ride = TEST_ride(pickUp=pickUp, dropOff=dropOff , date=date,time=time, pax=pax,carType=carType)
+        db.session.add(Book_Ride)
         db.session.commit()
-        return redirect(
-            url_for('auth.confirmride', pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType))
-
+        # flash('Booking Success!', 'success')
+        # return redirect(url_for('auth.confirmride', pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType))
+        # return redirect(url_for("auth.confirmride"))
+        return redirect(url_for("auth.confirmride"))
     return render_template("bookride.html")
 
 
@@ -136,3 +140,6 @@ def confirmsharedride():
 @auth.route('/settings')
 def settings():
     return render_template("settings.html")
+
+
+
