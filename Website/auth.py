@@ -107,18 +107,6 @@ def booksharedride():
         return redirect(url_for("auth.confirmride"))
     return render_template("booksharedride.html")
 
-        #fromLocation = locationdet(fromLocation)  # Passing to API
-        #toLocation = locationdet(toLocation)
-        #fromLocationlat = fromLocation[0]  # Assigning array values
-        #fromLocationlong = fromLocation[1]
-        #toLocationlat = toLocation[0]
-        #toLocationlong = toLocation[1]
-        #fromLocationname = fromLocation[2]
-        #toLocationname = toLocation[2]
-
-        #return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                              #  toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                               # fromLocationname=fromLocationname, toLocationname=toLocationname))
 
 
 
@@ -134,6 +122,8 @@ def confirmride():
     return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
                            toLocationlat=toLocationlat, toLocationlong=toLocationlong,
                            fromLocationname=fromLocationname, toLocationname=toLocationname)
+
+
 
 
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
