@@ -95,14 +95,13 @@ def booksharedride():
         #dropOff  = request.form.get('dropOff')
         #secondDropoff = request.form.get('secondDropoff')
         #time = request.form.get('time')
-        #pax = request.form.get('pax')
-        #ctt = request.form.get('ctt')
+        pax = request.form.get('pax')
+        #c = request.form.get('c')
         #date = request.form.get('date')
         #paym = request.form.get('paym')
-        typee= request.form.get('typee')
 
 
-        Share_Ride = table2(typee=typee)
+        Share_Ride = table2(pax=pax)
         db.session.add(Share_Ride)
         db.session.commit()
         return redirect(url_for("auth.confirmride"))

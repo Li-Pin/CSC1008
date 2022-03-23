@@ -33,11 +33,8 @@ class table2(UserMixin, db.Model):
     #secondDropoff = db.Column(db.String(80))
     #date = db.Column(db.String(100))
     #time = db.Column(db.String(80))
-    #pax = db.Column(db.String(80))
-    #ctt = db.column(db.String(80))
+    pax = db.Column(db.String(80))
     #paym=db.column(db.String(100))
-    typee = db.column(db.String(100))
-
 
 
 # Payment = db.column(db.String(100))
