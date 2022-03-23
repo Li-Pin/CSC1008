@@ -2,20 +2,33 @@
 
 {% block content %}
     <div align="center">
-        <h1>Book a Shared Ride</h1>
+        <h1>Book a Ride</h1>
     </div>
 
     <form id=centerRegister method="POST">
-        <label >Pick up:</label>
-                <input type="text" class="form-control" name="fromLocation" required><br/>
-        <label >Drop Off:</label>
-                <input type="text" class="form-control"  name="toLocation" required><br/>
+        <br/><label >First Pick up:</label>
+                <input type="text" class="form-control" name="pickUp" required>
+        <label >First Drop Off:</label>
+                <input type="text" class="form-control"  name="dropOff" required><br/>
+        <label >Second Pick up:</label>
+                <input type="text" class="form-control" name="secondPickup" required>
+        <label >Second Drop Off:</label>
+                <input type="text" class="form-control"  name="secondDropoff" required><br/>
         <label >Date:</label>
-                <input type="date" class="form-control"  name="date" required><br/>
+                <input type="date" class="form-control"  format='%Y-%m-%d' name="date" required><br/>
         <label >Time:</label>
-                <input type="time" class="form-control"  name="time" required><br/>
+                <input type="time" class="form-control"  format='%H-%M' name="time" required><br/>
+        <label for="typee" >Pax:</label>
+                <select name="typee" id="typee">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option></select><br/>
 
-        <!--<label >Email:</label>
+
+
+                 <!--<label >Email:</label>
             <input  class="form-control"  name="email" required><br/><br/>
 -->
 

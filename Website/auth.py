@@ -4,7 +4,7 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from . import db
-from .models import User, TEST_ride
+from .models import User, TEST_ride, table2
 from oneMapMethods import locationdet
 
 
@@ -90,23 +90,37 @@ def bookride():
 @auth.route('/booksharedride', methods=['GET', 'POST'])
 def booksharedride():
     if request.method == 'POST':
-        fromLocation = request.form.get('fromLocation')  # Taking input from form
-        toLocation = request.form.get('toLocation')
-        date = request.form.get('date')
-        fromLocation = locationdet(fromLocation)  # Passing to API
-        toLocation = locationdet(toLocation)
-        fromLocationlat = fromLocation[0]  # Assigning array values
-        fromLocationlong = fromLocation[1]
-        toLocationlat = toLocation[0]
-        toLocationlong = toLocation[1]
-        fromLocationname = fromLocation[2]
-        toLocationname = toLocation[2]
+        #pickUp = request.form.get('pickUp')  # Taking input from form
+        #secondPickup = request.form.get('secondPickup')
+        #dropOff  = request.form.get('dropOff')
+        #secondDropoff = request.form.get('secondDropoff')
+        #time = request.form.get('time')
+        #pax = request.form.get('pax')
+        #ctt = request.form.get('ctt')
+        #date = request.form.get('date')
+        #paym = request.form.get('paym')
+        typee= request.form.get('typee')
 
-        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                                fromLocationname=fromLocationname, toLocationname=toLocationname))
 
+        Share_Ride = table2(typee=typee)
+        db.session.add(Share_Ride)
+        db.session.commit()
+        return redirect(url_for("auth.confirmride"))
     return render_template("booksharedride.html")
+
+        #fromLocation = locationdet(fromLocation)  # Passing to API
+        #toLocation = locationdet(toLocation)
+        #fromLocationlat = fromLocation[0]  # Assigning array values
+        #fromLocationlong = fromLocation[1]
+        #toLocationlat = toLocation[0]
+        #toLocationlong = toLocation[1]
+        #fromLocationname = fromLocation[2]
+        #toLocationname = toLocation[2]
+
+        #return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+                              #  toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+                               # fromLocationname=fromLocationname, toLocationname=toLocationname))
+
 
 
 @auth.route('/confirmride', methods=['GET', 'POST'])
