@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     # rides = db.relationship('Rides')
 
 
-# user database
+# ride database
 class TEST_ride(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pickUp = db.Column(db.String(80))
@@ -25,39 +25,13 @@ class TEST_ride(UserMixin, db.Model):
     paym = db.Column(db.String(80))
 
 
-# Book shared ride database
-class table2(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    #pickUp = db.Column(db.String(80))
-    #secondPickup = db.Column(db.String(80))
-    #dropOff = db.Column(db.String(80))
-    #secondDropoff = db.Column(db.String(80))
-    #date = db.Column(db.String(100))
-    #time = db.Column(db.String(80))
-    #pax = db.Column(db.String(80))
-    #paym=db.column(db.String(100))
-    c=db.column(db.String(80))
-
-# Payment = db.column(db.String(100))
-
-
-# rides database
-class Rides(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    fromLocation = db.Column(db.Float(100))
-    toLocation = db.Column(db.Float(100))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-
-#TESTING
-class testingc(db.Model):
+# shared ride database
+class TEST_shared(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     carType = db.Column(db.String(80))
     pickUp = db.Column(db.String(80))
     dropOff = db.Column(db.String(80))
     pax = db.Column(db.String(80))
-    secondPickup = db.Column(db.String(80))
-    secondDropoff= db.Column(db.String(80))
     date = db.Column(db.String(80))
     time = db.Column(db.String(80))
     paym = db.Column(db.String(80))

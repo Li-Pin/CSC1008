@@ -2,7 +2,7 @@
 
 {% block content %}
 <div align="center" xmlns="http://www.w3.org/1999/html">
-        <h1>Book a Ride</h1>
+        <h1>Book a Shared Ride</h1>
     </div>
 
     <form id=centerSharedRide method="POST">
@@ -10,10 +10,6 @@
                 <input type="text" class="form-control" name="pickUp" required><br/>
         <label >Drop Off:</label>
                 <input type="text" class="form-control"  name="dropOff" required><br/>
-        <label >Second Pick up:</label>
-                <input type="text" class="form-control" name="secondPickup" required><br/>
-        <label >Second Drop Off:</label>
-                <input type="text" class="form-control"  name="secondDropoff" required><br/>
         <label >Date:</label>
                 <input type="date" class="form-control"  format='%Y-%m-%d' name="date" required><br/>
         <label >Time:</label>
@@ -23,24 +19,25 @@
         <option value="Volvo">Volvo</option>
         <option value="Hyundai">Hyundai</option>
         <option value="Toyota">Toyota</option>
-        <option value="Chevrolet">Chevrolet</option>
-        </select> <label >Pax:</label>
-                <select name="pax" id="pax">
+        <option value="Chevrolet">Chevrolet</option></select>
+        <br><br/>
+        <label >Pax:</label>
+        <select name="pax" id="pax">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
         <option value="5">5</option></select>
+        <br><br/>
         <label >Payment:</label>
-                <select name="paym" id="paym">
+        <select name="paym" id="paym">
         <option value="Cash">Cash</option>
         <option value="PayNow">PayNow</option>
         <option value="PayLah">PayLah</option>
         <option value="Credit card">CreditCard</option></select><br/>
         <!--<label >Email:</label>
             <input  class="form-control"  name="email" required><br/><br/>
--->
-        <br><br/>
+-->     <br><br/>
         <button type="submit" class="btn btn-outline-info">Next</button>
     </form>
 
