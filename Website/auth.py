@@ -77,13 +77,24 @@ def bookride():
         pax = request.form.get('pax')
         paym = request.form.get('paym')
         carType = request.form.get('carType')
+
+        fromLocation = locationdet(pickUp)  # Passing to API
+        toLocation = locationdet(dropOff)
+        fromLocationlat = fromLocation[0]  # Assigning array values
+        fromLocationlong = fromLocation[1]
+        toLocationlat = toLocation[0]
+        toLocationlong = toLocation[1]
+        fromLocationname = fromLocation[2]
+        toLocationname = toLocation[2]
+
         Book_Ride = TEST_ride(pickUp=pickUp, dropOff=dropOff , date=date,time=time, pax=pax,carType=carType,paym=paym)
         db.session.add(Book_Ride)
         db.session.commit()
         # flash('Booking Success!', 'success')
-        # return redirect(url_for('auth.confirmride', pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, CarType=CarType))
+        return redirect(url_for('auth.confirmride',fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
         # return redirect(url_for("auth.confirmride"))
-        return redirect(url_for("auth.confirmride"))
+        #return redirect(url_for("auth.confirmride"))
     return render_template("bookride.html")
 
 
