@@ -65,7 +65,6 @@ def home():
     return render_template("home.html")
 
 
-
 # Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
 def bookride():
@@ -109,8 +108,6 @@ def booksharedride():
     return render_template("booksharedride.html")
 
 
-
-
 @auth.route('/confirmride', methods=['GET', 'POST'])
 def confirmride():
     fromLocationlat = request.args.get('fromLocationlat', None)
@@ -123,8 +120,6 @@ def confirmride():
     return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
                            toLocationlat=toLocationlat, toLocationlong=toLocationlong,
                            fromLocationname=fromLocationname, toLocationname=toLocationname)
-
-
 
 
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
