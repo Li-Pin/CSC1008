@@ -2,7 +2,7 @@ import datetime
 
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user
+from flask_login import login_user, login_required, current_user
 from . import db
 from .models import User, TEST_ride, testingc
 from oneMapMethods import locationdet
@@ -29,7 +29,7 @@ def login_post():
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.login'))
     # if user exists, log user in
-    login_user(user)
+    login_user(user, remember=True)
     return redirect(url_for('auth.home'))
 
 
@@ -52,7 +52,7 @@ def register():
         new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email)
         db.session.add(new_user)
         db.session.commit()
-
+        login_user(user, remember=True)
         flash('Registration Success!', 'success')
         return redirect(url_for("auth.login"))
 
@@ -61,13 +61,14 @@ def register():
 
 # Route to homepage
 @auth.route('/home', methods=['GET', 'POST'])
+@login_required
 def home():
     return render_template("home.html")
 
 
-
 # Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
+@login_required
 def bookride():
     if request.method == 'POST':
         pickUp = request.form.get('pickUp')
@@ -101,6 +102,7 @@ def bookride():
 
 # Route to book shared ride page
 @auth.route('/booksharedride', methods=['GET', 'POST'])
+@login_required
 def booksharedride():
     if request.method == 'POST':
         pickUp = request.form.get('pickUp')  # Taking input from form
@@ -121,9 +123,8 @@ def booksharedride():
     return render_template("booksharedride.html")
 
 
-
-
 @auth.route('/confirmride', methods=['GET', 'POST'])
+@login_required
 def confirmride():
     fromLocationlat = request.args.get('fromLocationlat', None)
     fromLocationlong = request.args.get('fromLocationlong', None)
@@ -137,9 +138,8 @@ def confirmride():
                            fromLocationname=fromLocationname, toLocationname=toLocationname)
 
 
-
-
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
+@login_required
 def confirmsharedride():
     fromLocationlat = request.args.get('fromLocationlat', None)
     fromLocationlong = request.args.get('fromLocationlong', None)
@@ -154,6 +154,7 @@ def confirmsharedride():
 
 
 @auth.route('/settings')
+@login_required
 def settings():
     return render_template("settings.html")
 
