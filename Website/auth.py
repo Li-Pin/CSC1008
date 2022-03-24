@@ -95,7 +95,7 @@ def bookride():
         toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
         # return redirect(url_for("auth.confirmride"))
         #return redirect(url_for("auth.confirmride"))
-
+        # delete this line  hahaha just testing for git!
     return render_template("bookride.html")
 
 
