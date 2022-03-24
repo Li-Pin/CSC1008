@@ -22,6 +22,7 @@ class TEST_ride(UserMixin, db.Model):
     time = db.Column(db.String(80))
     pax = db.Column(db.String(80))
     carType = db.Column(db.String(80))
+    paym = db.Column(db.String(80))
 
 
 # Book shared ride database
