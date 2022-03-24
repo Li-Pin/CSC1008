@@ -2,9 +2,9 @@ import datetime
 
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user
 from . import db
-from .models import User, TEST_ride
+from .models import User, TEST_ride, testingc
 from oneMapMethods import locationdet
 
 
@@ -29,7 +29,7 @@ def login_post():
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.login'))
     # if user exists, log user in
-    login_user(user, remember=True)
+    login_user(user)
     return redirect(url_for('auth.home'))
 
 
@@ -52,7 +52,7 @@ def register():
         new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email)
         db.session.add(new_user)
         db.session.commit()
-        login_user(user, remember=True)
+
         flash('Registration Success!', 'success')
         return redirect(url_for("auth.login"))
 
@@ -61,7 +61,6 @@ def register():
 
 # Route to homepage
 @auth.route('/home', methods=['GET', 'POST'])
-@login_required
 def home():
     return render_template("home.html")
 
@@ -69,7 +68,6 @@ def home():
 
 # Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
-@login_required
 def bookride():
     if request.method == 'POST':
         pickUp = request.form.get('pickUp')
@@ -90,30 +88,29 @@ def bookride():
 
 # Route to book shared ride page
 @auth.route('/booksharedride', methods=['GET', 'POST'])
-@login_required
 def booksharedride():
     if request.method == 'POST':
-        fromLocation = request.form.get('fromLocation')  # Taking input from form
-        toLocation = request.form.get('toLocation')
+        pickUp = request.form.get('pickUp')  # Taking input from form
+        secondPickup = request.form.get('secondPickup')
+        dropOff  = request.form.get('dropOff')
+        secondDropoff = request.form.get('secondDropoff')
+        time = request.form.get('time')
+        pax = request.form.get('pax')
+        carType = request.form.get('carType')
         date = request.form.get('date')
-        fromLocation = locationdet(fromLocation)  # Passing to API
-        toLocation = locationdet(toLocation)
-        fromLocationlat = fromLocation[0]  # Assigning array values
-        fromLocationlong = fromLocation[1]
-        toLocationlat = toLocation[0]
-        toLocationlong = toLocation[1]
-        fromLocationname = fromLocation[2]
-        toLocationname = toLocation[2]
+        paym = request.form.get('paym')
 
-        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                                fromLocationname=fromLocationname, toLocationname=toLocationname))
 
+        Share_Ride = testingc(carType=carType,pickUp=pickUp,dropOff=dropOff,pax=pax,secondPickup=secondPickup,secondDropoff=secondDropoff,date=date,time=time,paym =paym )
+        db.session.add(Share_Ride)
+        db.session.commit()
+        return redirect(url_for("auth.confirmride"))
     return render_template("booksharedride.html")
 
 
+
+
 @auth.route('/confirmride', methods=['GET', 'POST'])
-@login_required
 def confirmride():
     fromLocationlat = request.args.get('fromLocationlat', None)
     fromLocationlong = request.args.get('fromLocationlong', None)
@@ -127,8 +124,9 @@ def confirmride():
                            fromLocationname=fromLocationname, toLocationname=toLocationname)
 
 
+
+
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
-@login_required
 def confirmsharedride():
     fromLocationlat = request.args.get('fromLocationlat', None)
     fromLocationlong = request.args.get('fromLocationlong', None)
@@ -143,9 +141,7 @@ def confirmsharedride():
 
 
 @auth.route('/settings')
-@login_required
 def settings():
     return render_template("settings.html")
-
 
 

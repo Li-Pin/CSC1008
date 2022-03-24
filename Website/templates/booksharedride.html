@@ -2,19 +2,41 @@
 
 {% block content %}
     <div align="center">
-        <h1>Book a Shared Ride</h1>
+        <h1>Book a Ride</h1>
     </div>
 
     <form id=centerRegister method="POST">
         <label >Pick up:</label>
-                <input type="text" class="form-control" name="fromLocation" required><br/>
+                <input type="text" class="form-control" name="pickUp" required><br/>
         <label >Drop Off:</label>
-                <input type="text" class="form-control"  name="toLocation" required><br/>
+                <input type="text" class="form-control"  name="dropOff" required><br/>
+        <label >Second Pick up:</label>
+                <input type="text" class="form-control" name="secondPickup" required><br/>
+        <label >Second Drop Off:</label>
+                <input type="text" class="form-control"  name="secondDropoff" required><br/>
         <label >Date:</label>
-                <input type="date" class="form-control"  name="date" required><br/>
+                <input type="date" class="form-control"  format='%Y-%m-%d' name="date" required><br/>
         <label >Time:</label>
-                <input type="time" class="form-control"  name="time" required><br/>
-
+                <input type="time" class="form-control"  format='%H-%M' name="time" required><br/>
+        <label for="carType" >Car type:</label>
+        <select name="carType" id="carType">
+        <option value="Volvo">Volvo</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Chevrolet">Chevrolet</option>
+        </select> <label >Pax:</label>
+                <select name="pax" id="pax">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option></select>
+        <label >Payment:</label>
+                <select name="paym" id="paym">
+        <option value="Cash">Cash</option>
+        <option value="PayNow">PayNow</option>
+        <option value="PayLah">PayLah</option>
+        <option value="Credit card">CreditCard</option></select><br/>
         <!--<label >Email:</label>
             <input  class="form-control"  name="email" required><br/><br/>
 -->
