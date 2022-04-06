@@ -4,7 +4,7 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
 from . import db
-from .models import User, TEST_ride, testingc, TEST_shared
+from .models import User, TEST_ride, TEST_shared
 from oneMapMethods import locationdet
 
 
