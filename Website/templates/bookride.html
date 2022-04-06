@@ -4,13 +4,22 @@
     <div align="center">
         <h1>Book a Ride</h1>
     </div>
-
     <form id=centerRide method="POST">
         <label >Pick up:</label>
-                <input type="text" class="form-control" name="pickUp" required><br/>
+                 <select name="pickUp" id="pickUp">
+        <option value="569732">Location 1</option>
+        <option value="560208">Location 2</option>
+        <option value="560217">Location 3</option>
+        <option value="560224">Location 4</option>
+        <option value="560220">Location 5</option></select><br/>
         <label >Drop Off:</label>
-                <input type="text" class="form-control"  name="dropOff" required><br/>
-        <label >Date:</label>
+                 <select name="dropOff" id="dropOff">
+        <option value="560305">Location 1</option>
+        <option value="560217">Location 2</option>
+        <option value="560330">Location 3</option>
+        <option value="560337">Location 4</option>
+        <option value="560208">Location 5</option></select><br/>
+            <label >Date:</label>
                 <input type="date" class="form-control"  format='%Y-%m-%d' name="date" required><br/>
         <label >Time:</label>
                 <input type="time" class="form-control"  format='%H-%M' name="time" required><br/>
