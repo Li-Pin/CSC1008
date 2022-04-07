@@ -120,10 +120,10 @@ class Graph:
         D[self.start] = 0
         self.parent = {v: int(-1) for v in range(self.v)}
         pq = Queue()
-        pq.put((0, self.start))
+        pq.enqueue((0, self.start))
         self.visited.clear()
-        while not pq.empty():
-            (temp, current_vertex) = pq.get()
+        while not pq.isEmpty():
+            (temp, current_vertex) = pq.dequeue()
             self.visited.append(current_vertex)
 
             for neighbor in range(self.v):
@@ -133,42 +133,44 @@ class Graph:
                         old_cost = D[neighbor]
                         new_cost = D[current_vertex] + distance
                         if new_cost < old_cost:
-                            pq.put((new_cost, neighbor))
+                            pq.enqueue((new_cost, neighbor))
                             D[neighbor] = new_cost
                             self.parent[neighbor] = current_vertex
 
         return D
 
-def finddriver(graph, s):
-    driverisat = ''
-    if graph.locations[s][3]==True:
-        driverisat=s
-        return driverisat
-    visited = {}
-    bfs_traversal_output = []
-    queue = Queue()
-    for location in graph.edgeGraph.keys():
-        visited[location] = False
-    visited[s] = True
-    queue.put(s)
+def finddriver(graph, s, max):
 
-    print(graph.edgeGraph[s])
-    while not queue.empty():
-        u = queue.get()
-        bfs_traversal_output.append(u)
-        print('test')
-        for v in graph.edgeGraph[u]:
-            if not visited[v[0]]:
-                if v[2] == True:
-                    print('driver found at graph')
-                    print(v[0])
-                    driverisat = v[0]
-                    break
-                visited[v[0]] = True
-                queue.put(v[0])
-                # for j in graph.vertices.keys():
-    print(driverisat)
-    print(bfs_traversal_output)
+    driverisat = 'No driver'
+    while(driverisat=='No driver' and max < 21):
+        if graph.locations[s][3]==True:
+            driverisat=s
+            return driverisat
+        visited = {}
+        bfs_traversal_output = []
+        queue = Queue()
+        for location in graph.edgeGraph.keys():
+            visited[location] = False
+        visited[s] = True
+        queue.enqueue(s)
+
+        print(graph.edgeGraph[s])
+        while not queue.isEmpty():
+            u = queue.dequeue()
+            bfs_traversal_output.append(u)
+            print('test')
+            for v in graph.edgeGraph[u]:
+                if not visited[v[0]]:
+                    if v[2] == True and v[1] < max:
+                        print('driver found at graph')
+                        print(v[0])
+                        driverisat = v[0]
+                        break
+                    visited[v[0]] = True
+                    queue.enqueue(v[0])
+                    # for j in graph.vertices.keys():
+        max = max+5
+
     return driverisat
 
 
@@ -183,11 +185,11 @@ g.add_edge(2, 4, 2)
 g.add_edge(3, 4, 10)
 g.add_edge(3, 5, 5)
 g.add_edge(4, 5, 15)
-g.add_edge(4, 7, 1)
+g.add_edge(4, 7, 100)
 g.add_edge(4, 8, 5)
 g.add_edge(5, 8, 12)
-g.add_edge(6, 7, 1)
-g.add_edge(7, 8, 3)
+g.add_edge(6, 7, 100)
+g.add_edge(7, 8, 25)
 print(len(g.locations))
 start = input('Enter Start Point: ')
 end = input('Enter End Point: ')
@@ -209,7 +211,7 @@ for vertex in range(len(C)):
     print("Distance from vertex ", start, " to vertex", vertex, "is", C[vertex])
 for k in g.edgeGraph.keys():
     g.mergeSort(g.edgeGraph[k])
-driverStart = int(finddriver(g, int(start)))
+driverStart = int(finddriver(g, int(start), 1))
 print('Driver is at', driverStart)
 C = g.dijkstra(str(driverStart), start)
 g.printSolution(C, g.parent)
