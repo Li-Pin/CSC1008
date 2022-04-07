@@ -142,34 +142,33 @@ class Graph:
 def finddriver(graph, s, max):
 
     driverisat = 'No driver'
-    while(driverisat=='No driver' and max < 21):
-        if graph.locations[s][3]==True:
-            driverisat=s
-            return driverisat
-        visited = {}
-        bfs_traversal_output = []
-        queue = Queue()
-        for location in graph.edgeGraph.keys():
-            visited[location] = False
-        visited[s] = True
-        queue.enqueue(s)
+    if graph.locations[s][3]==True:
+        driverisat=s
+        return driverisat
+    visited = {}
+    bfs_traversal_output = []
+    queue = Queue()
+    for location in graph.edgeGraph.keys():
+        visited[location] = False
+    visited[s] = True
+    queue.enqueue(s)
 
-        print(graph.edgeGraph[s])
-        while not queue.isEmpty():
-            u = queue.dequeue()
-            bfs_traversal_output.append(u)
-            print('test')
-            for v in graph.edgeGraph[u]:
-                if not visited[v[0]]:
-                    if v[2] == True and v[1] < max:
-                        print('driver found at graph')
-                        print(v[0])
-                        driverisat = v[0]
-                        break
-                    visited[v[0]] = True
-                    queue.enqueue(v[0])
-                    # for j in graph.vertices.keys():
-        max = max+5
+    print(graph.edgeGraph[s])
+    while not queue.isEmpty():
+        u = queue.dequeue()
+        bfs_traversal_output.append(u)
+        print('test')
+        for v in graph.edgeGraph[u]:
+            if not visited[v[0]]:
+                if v[2] == True and v[1] < max:
+                    print('driver found at graph')
+                    print(v[0])
+                    driverisat = v[0]
+                    break
+                visited[v[0]] = True
+                queue.enqueue(v[0])
+                # for j in graph.vertices.keys():
+
 
     return driverisat
 
@@ -185,11 +184,11 @@ g.add_edge(2, 4, 2)
 g.add_edge(3, 4, 10)
 g.add_edge(3, 5, 5)
 g.add_edge(4, 5, 15)
-g.add_edge(4, 7, 100)
-g.add_edge(4, 8, 5)
+g.add_edge(4, 7, 1)
+g.add_edge(4, 8, 7)
 g.add_edge(5, 8, 12)
-g.add_edge(6, 7, 100)
-g.add_edge(7, 8, 25)
+g.add_edge(6, 7, 1)
+g.add_edge(7, 8, 3)
 print(len(g.locations))
 start = input('Enter Start Point: ')
 end = input('Enter End Point: ')
@@ -211,7 +210,11 @@ for vertex in range(len(C)):
     print("Distance from vertex ", start, " to vertex", vertex, "is", C[vertex])
 for k in g.edgeGraph.keys():
     g.mergeSort(g.edgeGraph[k])
-driverStart = int(finddriver(g, int(start), 1))
-print('Driver is at', driverStart)
-C = g.dijkstra(str(driverStart), start)
-g.printSolution(C, g.parent)
+max = input('Enter max driver distance')
+driverStart = finddriver(g, int(start), int(max))
+if driverStart != 'No driver':
+    print('Driver is at', int(driverStart))
+    C = g.dijkstra(str(driverStart), start)
+    g.printSolution(C, g.parent)
+else:
+    print('No driver nearby! ')
