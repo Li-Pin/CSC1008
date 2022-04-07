@@ -1,4 +1,4 @@
-from queue import PriorityQueue, Queue
+from queue import Queue
 
 
 class Graph:
@@ -34,50 +34,47 @@ class Graph:
             self.edgeGraph[u].append((v, weight, self.locations[v][3]))
         if not isDirected:
             self.edgeGraph[v].append((u, weight, self.locations[u][3]))
-    # def mergeSort(self):
-    #     for k in self.edgeGraph.keys():
-    #         if len(self.edgeGraph) > 1:
-    #
-    #             # Finding the mid of the array
-    #             mid = len(arr) // 2
-    #
-    #             # Dividing the array elements
-    #             L = arr[:mid]
-    #
-    #             # into 2 halves
-    #             R = arr[mid:]
-    #
-    #             # Sorting the first half
-    #             self.mergeSort(L)
-    #
-    #             # Sorting the second half
-    #             self.mergeSort(R)
-    #
-    #             i = j = k = 0
-    #
-    #             # Copy data to temp arrays L[] and R[]
-    #             while i < len(L) and j < len(R):
-    #                 if L[i] < R[j]:
-    #                     arr[k] = L[i]
-    #                     i += 1
-    #                 else:
-    #                     arr[k] = R[j]
-    #                     j += 1
-    #                 k += 1
-    #
-    #             # Checking if any element was left
-    #             while i < len(L):
-    #                 arr[k] = L[i]
-    #                 i += 1
-    #                 k += 1
-    #
-    #             while j < len(R):
-    #                 arr[k] = R[j]
-    #                 j += 1
-    #                 k += 1
-    #
-    #     self.edgeGraph
-    #     for k in self.edgeGraph.keys():
+    def mergeSort(self, edgeGraph):
+            if len(edgeGraph) > 1:
+
+                # Finding the mid of the array
+                mid = len(edgeGraph) // 2
+
+                # Dividing the array elements
+                L = edgeGraph[:mid]
+
+                # into 2 halves
+                R = edgeGraph[mid:]
+
+                # Sorting the first half
+                self.mergeSort(L)
+
+                # Sorting the second half
+                self.mergeSort(R)
+
+                i = j = o = 0
+
+                # Copy data to temp arrays L[] and R[]
+                while i < len(L) and j < len(R):
+                    if L[i][1] < R[j][1]:
+                        edgeGraph[o] = L[i]
+                        i += 1
+                    else:
+                        edgeGraph[o] = R[j]
+                        j += 1
+                    o += 1
+
+                # Checking if any element was left
+                while i < len(L):
+                    edgeGraph[o] = L[i]
+                    i += 1
+                    o += 1
+
+                while j < len(R):
+                    edgeGraph[o] = R[j]
+                    j += 1
+                    o += 1
+
 
     def minDistance(self, dist, queue):
         # Initialize min value and min_index as -1
@@ -210,6 +207,8 @@ for i in range(len(g.edges)):
 print()
 for vertex in range(len(C)):
     print("Distance from vertex ", start, " to vertex", vertex, "is", C[vertex])
+for k in g.edgeGraph.keys():
+    g.mergeSort(g.edgeGraph[k])
 driverStart = int(finddriver(g, int(start)))
 print('Driver is at', driverStart)
 C = g.dijkstra(str(driverStart), start)
