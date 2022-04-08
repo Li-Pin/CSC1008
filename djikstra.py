@@ -49,7 +49,6 @@ class Graph:
         r = 6371
       
         return c*r
-     
 
     def add_edge(self, u, v, weight):
         self.edges[u][v] = weight
