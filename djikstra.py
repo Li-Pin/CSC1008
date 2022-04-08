@@ -1,24 +1,56 @@
 from queue import Queue
+from math import radians, cos, sin, asin, sqrt
+import json, os
 from mergeSort import mergeSort
 
 class Graph:
-    locations = {
-        0: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        1: ['Ang Mo Kio', 1.352083, 103.819839, True],
-        2: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        3: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        4: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        5: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        6: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        7: ['Ang Mo Kio', 1.352083, 103.819839, False],
-        8: ['Ang Mo Kio', 1.352083, 103.819839, True]
-    }
 
-    def __init__(self, num_of_vertices):
-        self.v = num_of_vertices
-        self.edges = [[-1 for i in range(num_of_vertices)] for j in range(num_of_vertices)]
+    file = open(os.path.abspath('JSON\junction.json'))
+    data = json.load(file)
+    locations = {}
+
+    def __init__(self):
+        self.setJunctionNode()
+        self.v = len(self.locations)
         self.visited = []
         self.edgeGraph = dict()
+        self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
+        self.setEdge()
+
+
+    def setJunctionNode(self):
+        for i in self.data['junction']:
+            self.locations.update({i['id']:[i['street_name'],i['lat'],i['lon'],i['edge']]})
+
+    def setEdge(self):
+        for i in range(len(self.locations)):
+            lat1 = self.locations[i][1]
+            lon1 = self.locations[i][2]
+            for j in range(len(self.locations[i][3])):
+                edgeID = self.locations[i][3][j]
+                lat2 = self.locations[edgeID][1]
+                lon2 = self.locations[edgeID][2]
+                distance = self.getDistance(lon1,lat1,lon2,lat2)
+                self.add_edge(i, edgeID, distance)
+
+
+    def getDistance(self,lon1,lat1,lon2,lat2):
+        lon1 = radians(lon1)
+        lon2 = radians(lon2)
+        lat1 = radians(lat1)
+        lat2 = radians(lat2)
+
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+
+        c = 2 * asin(sqrt(a))
+
+        # Radius of earth in KM.
+        r = 6371
+
+        return c*r
+
 
     def add_edge(self, u, v, weight):
         self.edges[u][v] = weight
@@ -107,23 +139,9 @@ class Graph:
 
 #main
 
-driverPath = []
-g = Graph(9)
-g.add_edge(0, 1, 4)
-g.add_edge(0, 6, 7)
-g.add_edge(1, 6, 11)
-g.add_edge(1, 7, 20)
-g.add_edge(1, 2, 9)
-g.add_edge(2, 3, 6)
-g.add_edge(2, 4, 2)
-g.add_edge(3, 4, 10)
-g.add_edge(3, 5, 5)
-g.add_edge(4, 5, 15)
-g.add_edge(4, 7, 1)
-g.add_edge(4, 8, 7)
-g.add_edge(5, 8, 12)
-g.add_edge(6, 7, 1)
-g.add_edge(7, 8, 3)
+
+
+g = Graph()
 
 
 # {0: 0, 1: 4, 2: 11, 3: 17, 4: 9, 5: 22, 6: 7, 7: 8, 8: 11}
