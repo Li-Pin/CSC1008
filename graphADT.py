@@ -1,3 +1,5 @@
+import random
+
 from sqlalchemy import true
 from queueADT import Queue
 from math import radians, cos, sin, asin, sqrt
@@ -8,13 +10,13 @@ from mergeSort import mergeSort
 class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
-#    locations = {}
+    #    locations = {}
     driver = {
-        1 : ["Peter Low", 91234457,"SKA1154C"],
-        2 : ["Alex Tan", 91234457,"SKA4554C"],
-        3 : ["Jess Low", 91234457,"SKA8888C"],
-        4 : ["Felix Tan", 88961234,"SKG4894C"],
-        5 : ["Lim Tan Lau", 89551445,"STH4354C"]
+        1: ["Peter Low", 91234457, "SKA1154C"],
+        2: ["Alex Tan", 91234457, "SKA4554C"],
+        3: ["Jess Low", 91234457, "SKA8888C"],
+        4: ["Felix Tan", 88961234, "SKG4894C"],
+        5: ["Lim Tan Lau", 89551445, "STH4354C"]
     }
 
     def __init__(self):
@@ -26,6 +28,8 @@ class Graph:
         self.visited = []
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
+        self.assignDriverLocation()
+
     def setJunctionNode(self):
         for i in self.data['junction']:
             self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], True, i['edge']]})
@@ -80,7 +84,6 @@ class Graph:
 
         # Base Case : If j is source
         if parent[j] == -1:
-
             pathArray.append(j)
             return
         self.printPath(parent, parent[j], pathArray)
@@ -95,15 +98,19 @@ class Graph:
         src = 0
         for i in range(1, len(dist)):
             if i == self.end:
-
                 self.printPath(parent, i, pathArray)
                 return dist[i]
 
+    def assignDriverLocation(self):
+        for i in range(len(g.driver)):
+            ranLocation = random.randint(0, len(g.locations))
+            if ranLocation not in g.driverLocation:
+                g.driverLocation.update({ranLocation: [i + 1]})
+            else:
+                g.driverLocation[ranLocation].append(i + 1)
 
 
 g = Graph()
-
-# {0: 0, 1: 4, 2: 11, 3: 17, 4: 9, 5: 22, 6: 7, 7: 8, 8: 11}
 
 # sorting edges in edgeGraph
 for k in g.edgeGraph.keys():
