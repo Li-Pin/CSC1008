@@ -18,7 +18,7 @@ class Graph:
         self.visited = []
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
-
+        self.driver = []
     def setJunctionNode(self):
         for i in self.data['junction']:
             self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], True, i['edge']]})
@@ -73,11 +73,11 @@ class Graph:
 
         # Base Case : If j is source
         if parent[j] == -1:
-            print(j, end=" ")
+
             pathArray.append(j)
             return
         self.printPath(parent, parent[j], pathArray)
-        print(j, end=" ")
+
         pathArray.append(j)
 
     # A utility function to print
@@ -86,13 +86,12 @@ class Graph:
     def printSolution(self, dist, parent, pathArray):
 
         src = 0
-        print("Vertex \t\tDistance from Source\tPath")
         for i in range(1, len(dist)):
             if i == self.end:
-                print("\n%d --> %d \t\t%f \t\t\t\t\t" % (self.start, i, dist[i]), end=" ")
 
                 self.printPath(parent, i, pathArray)
                 return dist[i]
+
 
 
 g = Graph()

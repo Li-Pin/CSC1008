@@ -29,6 +29,13 @@ class newBooking:
             bfs_traversal_output.append(u)
             for v in graph.edgeGraph[u]:
                 if not visited[v[0]]:
+                    #if driverlocation[v][0] is not None and v[1]< max:
+                        #print
+
+                    if v[0] in driverlocation: # v[0] = current search location
+                        driverID = driverLocation[v].pop(0) # this will pop driverID then find details from driverID array
+                        driverisat=v[0]
+                        break
                     if v[2] == True and v[1] < max:
                         print('driver found at graph')
                         print(v[0])
@@ -39,7 +46,7 @@ class newBooking:
                     # for j in graph.vertices.keys():
 
         print(bfs_traversal_output)
-        return driverisat
+        return driverisat, driverID
 
 def bookRide(self, start, end):
     self.dist = start + end
@@ -53,3 +60,9 @@ if driverStart != 'No driver':
 
 else:
     print('No driver nearby! ')
+
+
+
+
+
+
