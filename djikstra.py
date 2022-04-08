@@ -2,9 +2,10 @@ from queueClass import Queue
 from math import radians, cos, sin, asin, sqrt
 import json, os
 from mergeSort import mergeSort
+
+
 #
 class Graph:
-
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
     locations = {}
@@ -17,10 +18,9 @@ class Graph:
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
 
-
     def setJunctionNode(self):
         for i in self.data['junction']:
-            self.locations.update({i['id']:[i['street_name'],i['lat'],i['lon'],i['edge']]})
+            self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], i['edge']]})
 
     def setEdge(self):
         for i in range(len(self.locations)):
@@ -30,11 +30,10 @@ class Graph:
                 edgeID = self.locations[i][3][j]
                 lat2 = self.locations[edgeID][1]
                 lon2 = self.locations[edgeID][2]
-                distance = self.getDistance(lon1,lat1,lon2,lat2)
+                distance = self.getDistance(lon1, lat1, lon2, lat2)
                 self.add_edge(i, edgeID, distance)
 
-
-    def getDistance(self,lon1,lat1,lon2,lat2):
+    def getDistance(self, lon1, lat1, lon2, lat2):
         lon1 = radians(lon1)
         lon2 = radians(lon2)
         lat1 = radians(lat1)
@@ -42,15 +41,14 @@ class Graph:
 
         dlon = lon2 - lon1
         dlat = lat2 - lat1
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
 
         c = 2 * asin(sqrt(a))
 
         # Radius of earth in KM.
         r = 6371
 
-        return c*r
-
+        return c * r
 
     def add_edge(self, u, v, weight):
         self.edges[u][v] = weight
@@ -66,21 +64,6 @@ class Graph:
             self.edgeGraph[u].append((v, weight, self.locations[v][3]))
         if not isDirected:
             self.edgeGraph[v].append((u, weight, self.locations[u][3]))
-
-
-
-    # def minDistance(self, dist, queue):
-    #     # Initialize min value and min_index as -1
-    #     minimum = float("Inf")
-    #     min_index = -1
-    #
-    #     # from the dist array,pick one which
-    #     # has min value and is till in queue
-    #     for i in range(len(dist)):
-    #         if dist[i] < minimum and i in queue:
-    #             minimum = dist[i]
-    #             min_index = i
-    #     return min_index
 
     # Function to print shortest path
     # from source to j
@@ -136,17 +119,13 @@ class Graph:
         return D
 
 
-
-#main
-
+# main
 
 
 g = Graph()
-
 
 # {0: 0, 1: 4, 2: 11, 3: 17, 4: 9, 5: 22, 6: 7, 7: 8, 8: 11}
 
 # sorting edges in edgeGraph
 for k in g.edgeGraph.keys():
     mergeSort(g.edgeGraph[k])
-

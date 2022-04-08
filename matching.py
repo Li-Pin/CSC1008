@@ -1,5 +1,6 @@
 import customer
 import driver
+from queueClass import Queue
 class newBooking:
     def __init__(self, customer):
         self.customer = customer
