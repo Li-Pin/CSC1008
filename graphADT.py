@@ -8,7 +8,7 @@ from mergeSort import mergeSort
 class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
-#    locations = {}
+
     driver = {
         1 : ["Peter Low", 91234457,"SKA1154C"],
         2 : ["Alex Tan", 91234457,"SKA4554C"],
@@ -28,14 +28,14 @@ class Graph:
         self.setEdge()
     def setJunctionNode(self):
         for i in self.data['junction']:
-            self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], True, i['edge']]})
+            self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], i['edge']]})
 
     def setEdge(self):
         for i in range(len(self.locations)):
             lat1 = self.locations[i][1]
             lon1 = self.locations[i][2]
-            for j in range(len(self.locations[i][4])):
-                edgeID = self.locations[i][4][j]
+            for j in range(len(self.locations[i][3])):
+                edgeID = self.locations[i][3][j]
                 lat2 = self.locations[edgeID][1]
                 lon2 = self.locations[edgeID][2]
                 distance = self.getDistance(lon1, lat1, lon2, lat2)
