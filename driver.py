@@ -1,25 +1,28 @@
 from sqlalchemy import null
 from graphADT import g
 import random
+from djikstra import dijkstra
 
 
-class driver:
+class Driver:
 
-    def __init__(self):
-        self.name = 'Ah teck'  # replace with forms.get.(driver name)
-        self.id = 'ahteckSiol'  # replace with forms.get.(driverid)
+    def __init__(self, name):
+        self.name = name  # replace with forms.get.(driver name)
         self.start = None
         self.end = None
         self.pathRoute = []
-        self.assignDriverLocation()
+        self.pathDistance = 0
 
-
-    def startjob(self, start): # start should be key of location
+    def startjob(self, start):  # start should be key of location
         self.start = start
-        g.locations[start][3] = True
         # g.driver append driver name
         # g.driverlocation append if no key exist, new key [driverID] else new key = location : [driverID]
 
-    def driverRoute(self, customerLoc):
-        C = g.dijkstra(str(self.start), customerLoc)
+
+    def driverRoute(self, driverLoc, customerLoc):
+        self.start = driverLoc
+        self.end = customerLoc
+        C = dijkstra(g, str(self.start), self.end)
         g.printSolution(C, g.parent, self.pathRoute)
+        self.pathDistance = g.printSolution(C, g.parent, self.pathRoute)
+        return self.pathRoute, self.pathDistance

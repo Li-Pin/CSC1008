@@ -11,7 +11,7 @@ class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
 
-    driver = {
+    drivers = {
         1: ["Peter Low", 91234457, "SKA1154C"],
         2: ["Alex Tan", 91234457, "SKA4554C"],
         3: ["Jess Low", 91234457, "SKA8888C"],
@@ -29,6 +29,7 @@ class Graph:
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
         self.assignDriverLocation()
+        print(self.driverLocation)
 
     def setJunctionNode(self):
         for i in self.data['junction']:
@@ -102,12 +103,12 @@ class Graph:
                 return dist[i]
 
     def assignDriverLocation(self):
-        for i in range(len(g.driver)):
-            ranLocation = random.randint(0, len(g.locations))
-            if ranLocation not in g.driverLocation:
-                g.driverLocation.update({ranLocation: [i + 1]})
+        for i in range(len(self.drivers)):
+            ranLocation = random.randint(0, len(self.locations))
+            if ranLocation not in self.driverLocation:
+                self.driverLocation.update({ranLocation: [i + 1]})
             else:
-                g.driverLocation[ranLocation].append(i + 1)
+                self.driverLocation[ranLocation].append(i + 1)
 
 
 g = Graph()

@@ -1,8 +1,8 @@
 from queueADT import Queue
 
 def dijkstra(graph, startLoc, endLoc):
-    graph.end = int(startLoc)
-    graph.start = int(endLoc)
+    graph.start = int(startLoc)
+    graph.end = int(endLoc)
     distTo = {v: float('inf') for v in range(graph.v)}
     distTo[graph.start] = 0
     graph.parent = {v: int(-1) for v in range(graph.v)}

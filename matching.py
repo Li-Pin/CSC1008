@@ -1,58 +1,48 @@
 import customer
 import driver
 from queueADT import Queue
-from graphADT import g
-# from main2 import customer, driver, graph
-class newBooking:
+from graphADT import g as graph
 
-    # def __init__(self):
-        # self.customer = customer
-        # self.driver = None
-        # self.success = False
-        # self.drivertoCustomer = []
 
-    def finddriver(self, graph, s, max):
-        print('I am ran')
+class NewBooking:
+
+    def __init__(self, customerLocation, maxDist, CustomerName):
+        self.customerLocation = customerLocation
+        self.max = maxDist
+        self.CustomerName = CustomerName
+        self.driverName = None
+        self.driverToCustomer = []
+
+    def finddriver(self):
         driverisat = 'No driver'
         driverID = None
 
-        if s in graph.driverLocation:  # if driver is at current location
-            driverID = graph.driverLocation[s].pop(0)  # pop first driver at current location
-            return s, driverID
+        if self.customerLocation in graph.driverLocation:  # if driver is at current location
+            driverID = graph.driverLocation[self.customerLocation].pop(0)  # pop first driver at current location
+            self.driverName = graph.drivers[driverID][0]
+            return self.customerLocation, driverID, self.driverName
         visited = {}
         bfs_traversal_output = []
         queue = Queue()
         for location in graph.edgeGraph.keys():
             visited[location] = False
-        visited[s] = True
-        queue.enqueue(s)
+        visited[self.customerLocation] = True
+        queue.enqueue(self.customerLocation)
 
         while not queue.isEmpty():
             u = queue.dequeue()
             bfs_traversal_output.append(u)
             for v in graph.edgeGraph[u]:
                 if not visited[v[0]]:
-                    if v[0] in graph.driverLocation and v[1]< max: # v[0] = current search location
-                        driverID = graph.driverLocation[v[0]].pop(0) # this will pop driverID then find details from driverID array
-                        driverisat=v[0]
-                        return driverisat, driverID
+                    if v[0] in graph.driverLocation and v[1] < self.max:  # v[0] = current search location
+                        driverID = graph.driverLocation[v[0]].pop(
+                            0)  # this will pop driverID then find details from driverID array
+                        driverisat = v[0]
+                        self.driverName = graph.drivers[driverID][0]
+                        return driverisat, driverID, self.driverName
 
                     visited[v[0]] = True
                     queue.enqueue(v[0])
                     # for j in graph.vertices.keys():
 
         return driverisat, driverID
-testbooking = newBooking()
-driverStart, driveridd = testbooking.finddriver(g, 1, 200)
-
-if driverStart != 'No driver':
-    print('Driver is at', int(driverStart))
-
-else:
-    print('No driver nearby! ')
-
-
-
-
-
-
