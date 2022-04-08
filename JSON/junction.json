@@ -3,8 +3,8 @@
     "junction": [
         {
             "id": 0,
-            "lat": 1.40013,
-            "lon": 103.90520,
+            "lat": 1.403392,
+            "lon": 103.896814,
             "street_name": "Punggol Field",
             "edge": [1,2]
         },{
