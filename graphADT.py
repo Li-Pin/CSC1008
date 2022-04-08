@@ -9,16 +9,23 @@ class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
 #    locations = {}
+    driver = {
+        1 : ["Peter Low", 91234457,"SKA1154C"],
+        2 : ["Alex Tan", 91234457,"SKA4554C"],
+        3 : ["Jess Low", 91234457,"SKA8888C"],
+        4 : ["Felix Tan", 88961234,"SKG4894C"],
+        5 : ["Lim Tan Lau", 89551445,"STH4354C"]
+    }
 
     def __init__(self):
         self.edgeGraph = dict()
         self.locations = dict()
+        self.driverLocation = dict()
         self.setJunctionNode()
         self.v = len(self.locations)
         self.visited = []
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
-        self.driver = []
     def setJunctionNode(self):
         for i in self.data['junction']:
             self.locations.update({i['id']: [i['street_name'], i['lat'], i['lon'], True, i['edge']]})

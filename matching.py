@@ -1,21 +1,24 @@
 import customer
 import driver
 from queueADT import Queue
-
-from main2 import customer, driver, graph
+from graphADT import g
+# from main2 import customer, driver, graph
 class newBooking:
-    def __init__(self, customer):
-        self.customer = customer
-        self.driver = None
-        self.success = False
-        self.drivertoCustomer = []
 
-    def finddriver(graph, s, max):
+    # def __init__(self):
+        # self.customer = customer
+        # self.driver = None
+        # self.success = False
+        # self.drivertoCustomer = []
+
+    def finddriver(self, graph, s, max):
+        print('I am ran')
         driverisat = 'No driver'
-        if graph.locations[s][3]==True:
-            driverisat=s
-            return driverisat
-        print('ran false')
+        driverID = None
+
+        if s in graph.driverLocation:  # if driver is at current location
+            driverID = graph.driverLocation[s].pop(0)  # pop first driver at current location
+            return s, driverID
         visited = {}
         bfs_traversal_output = []
         queue = Queue()
@@ -29,31 +32,18 @@ class newBooking:
             bfs_traversal_output.append(u)
             for v in graph.edgeGraph[u]:
                 if not visited[v[0]]:
-                    #if driverlocation[v][0] is not None and v[1]< max:
-                        #print
-
-                    if v[0] in driverlocation: # v[0] = current search location
-                        driverID = driverLocation[v].pop(0) # this will pop driverID then find details from driverID array
+                    if v[0] in graph.driverLocation and v[1]< max: # v[0] = current search location
+                        driverID = graph.driverLocation[v[0]].pop(0) # this will pop driverID then find details from driverID array
                         driverisat=v[0]
-                        break
-                    if v[2] == True and v[1] < max:
-                        print('driver found at graph')
-                        print(v[0])
-                        driverisat = v[0]
-                        break
+                        return driverisat, driverID
+
                     visited[v[0]] = True
                     queue.enqueue(v[0])
                     # for j in graph.vertices.keys():
 
-        print(bfs_traversal_output)
         return driverisat, driverID
-
-def bookRide(self, start, end):
-    self.dist = start + end
-
-    self.dist = g.dijkstra(start, end)
-
-driverStart = finddriver(g, int(start), int(max))
+testbooking = newBooking()
+driverStart, driveridd = testbooking.finddriver(g, 1, 200)
 
 if driverStart != 'No driver':
     print('Driver is at', int(driverStart))
