@@ -1,4 +1,4 @@
-from queue import Queue
+from queueClass import Queue
 from math import radians, cos, sin, asin, sqrt
 import json, os
 from mergeSort import mergeSort
@@ -105,7 +105,7 @@ class Graph:
         print("Vertex \t\tDistance from Source\tPath")
         for i in range(1, len(dist)):
             if i == self.end:
-                print("\n%d --> %d \t\t%d \t\t\t\t\t" % (self.start, i, dist[i]), end=" ")
+                print("\n%d --> %d \t\t%f \t\t\t\t\t" % (self.start, i, dist[i]), end=" ")
 
                 self.printPath(parent, i, pathArray)
 
