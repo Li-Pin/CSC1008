@@ -1,22 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div align="center">
-        <h1>Book a Ride</h1>
-    </div>
-    <html>
-          <head>
-            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-          </head>
-          <body>
-            <div id='mapdiv' style='height:400px;'></div>
-          </body>
+<div align="center">
+    <h1>Book a Ride</h1>
+</div>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+</head>
+<body>
+<div id='mapdiv' style='height:400px;'></div>
+</body>
 
-        <script>
+<script>
           var center = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
           var map = L.map('mapdiv').setView([center.x, center.y], 12);
-
           var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
             detectRetina: true,
             maxZoom: 18,
@@ -53,76 +56,104 @@
           map.fitBounds([[1.403033, 103.889170], [1.399421,  103.921985]]);
 
           basemap.addTo(map);
-        </script>
-    </html>
+</script>
+</html>
 
-    <form id=centerRide method="POST">
-        <div id="container">
+<form id=centerRide method="POST">
+    <div id="container">
         <div id="ridePart1">
             <label for="pickUp">Pick up:</label><br>
             <select name="pickUp" id="pickUp" required>
-                    <option value="560209">Location 1</option>
-                    <option value="560208">Location 2</option>
-                    <option value="560217">Location 3</option>
-                    <option value="560224">Location 4</option>
-                    <option value="560220">Location 5</option>
-            </select><br>
+                <option value="0">BLK 258A Punggol Field</option>
+                <option value="1">BLK 266A Punggol Central</option>
+                <option value="2">BLK 268D Punggol Walk</option>
+                <option value="3">BLK 73 Punggol Central</option>
+                <option value="4">BLK 298A Punggol Place</option>
+                <option value="5">BLK 302A Punggol Place</option>
+                <option value="6">BLK 306C Punggol Place</option>
+                <option value="7">BLK 202A Punggol Field</option>
+                <option value="8">BLK 298 Punggol Central</option>
+                <option value="9">BLK 305D Punggol Road</option>
+                <option value="10">BLK 101C Punggol Road</option>
+                <option value="11">BLK 45 Punggol Central</option>
+                <option value="12">BLK 615C Edgefield Plains</option>
+                <option value="13">BLK 110D Edgefield Plains</option>
+                <option value="14">BLK 52 Edgefield Plains</option>
+                <option value="15">BLK 635C Punggol Drive</option>
+                <option value="16">BLK 11 Punggol Field</option>
+                <option value="17">BLK 160B Punggol Central</option>
+                <option value="18">BLK 653A Punggol Drive</option>
+                \ </select><br>
 
             <label for="dropOff">Drop Off:</label><br>
-                <select name="dropOff" id="dropOff" required>
-                    <option value="560305">Location 1</option>
-                    <option value="560217">Location 2</option>
-                    <option value="560330">Location 3</option>
-                    <option value="560337">Location 4</option>
-                    <option value="560208">Location 5</option>
-                </select><br>
+            <select name="dropOff" id="dropOff" required>
+                <option value="0">BLK 258A Punggol Field</option>
+                <option value="1">BLK 266A Punggol Central</option>
+                <option value="2">BLK 268D Punggol Walk</option>
+                <option value="3">BLK 73 Punggol Central</option>
+                <option value="4">BLK 298A Punggol Place</option>
+                <option value="5">BLK 302A Punggol Place</option>
+                <option value="6">BLK 306C Punggol Place</option>
+                <option value="7">BLK 202A Punggol Field</option>
+                <option value="8">BLK 298 Punggol Central</option>
+                <option value="9">BLK 305D Punggol Road</option>
+                <option value="10">BLK 101C Punggol Road</option>
+                <option value="11">BLK 45 Punggol Central</option>
+                <option value="12">BLK 615C Edgefield Plains</option>
+                <option value="13">BLK 110D Edgefield Plains</option>
+                <option value="14">BLK 52 Edgefield Plains</option>
+                <option value="15">BLK 635C Punggol Drive</option>
+                <option value="16">BLK 11 Punggol Field</option>
+                <option value="17">BLK 160B Punggol Central</option>
+                <option value="18">BLK 653A Punggol Drive</option>
+            </select><br>
 
             <label for="date">Date:</label>
-                <input type="date" class="form-control"  format='%Y-%m-%d' name="date" id="date" required>
+            <input type="date" class="form-control" format='%Y-%m-%d' name="date" id="date" required>
             <label for="time">Time:</label>
-                <input type="time" class="form-control"  format='%H-%M' name="time" id="time" required>
+            <input type="time" class="form-control" format='%H-%M' name="time" id="time" required>
         </div>
 
         <div id="ridePart2">
-            <label for="carType" >Car type:</label><br>
-                <select name="carType" id="carType">
-                    <option value="Volvo">Volvo</option>
-                    <option value="Hyundai">Hyundai</option>
-                    <option value="Toyota">Toyota</option>
-                    <option value="Chevrolet">Chevrolet</option>
-                </select><br>
+            <label for="carType">Car type:</label><br>
+            <select name="carType" id="carType">
+                <option value="Volvo">Volvo</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Chevrolet">Chevrolet</option>
+            </select><br>
 
             <label for="pax">Pax:</label><br>
-                <select name="pax" id="pax">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select><br>
+            <select name="pax" id="pax">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select><br>
 
             <label for="paym">Payment:</label><br>
-                <select name="paym" id="paym">
-                    <option value="Cash">Cash</option>
-                    <option value="PayNow">PayNow</option>
-                    <option value="PayLah">PayLah</option>
-                    <option value="Credit card">CreditCard</option>
-                </select><br>
+            <select name="paym" id="paym">
+                <option value="Cash">Cash</option>
+                <option value="PayNow">PayNow</option>
+                <option value="PayLah">PayLah</option>
+                <option value="Credit card">CreditCard</option>
+            </select><br>
 
             <label for="searchRange">Search Range:</label><br>
-                <select name="searchRange" id="searchRange">
-                    <option value="noPref">No Preference</option>
-                    <option value="500m">500M</option>
-                    <option value="1km">1KM</option>
-                    <option value="1.5km">1.5KM</option>
-                    <option value="2km">2KM</option>
-                    <option value="2.5km">2.5KM</option>
-                    <option value="3km">3KM</option>
-                </select>
+            <select name="searchRange" id="searchRange">
+                <option value="noPref">No Preference</option>
+                <option value="500m">500M</option>
+                <option value="1km">1KM</option>
+                <option value="1.5km">1.5KM</option>
+                <option value="2km">2KM</option>
+                <option value="2.5km">2.5KM</option>
+                <option value="3km">3KM</option>
+            </select>
         </div>
-        </div>
-        <div id="btnSect" align="center">
-            <button type="submit" id ="rideButton" class="btn btn-outline-info">Next</button>
-        </div>
+    </div>
+    <div id="btnSect" align="center">
+        <button type="submit" id="rideButton" class="btn btn-outline-info">Next</button>
+    </div>
 </form>
 {% endblock %}
