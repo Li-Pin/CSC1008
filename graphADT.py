@@ -1,10 +1,13 @@
 import random
 
 from sqlalchemy import true
+from Website import auth
 from queueADT import Queue
 from math import radians, cos, sin, asin, sqrt
 import json, os
 from mergeSort import mergeSort
+from Website.models import drivertble
+
 
 
 class Graph:
@@ -12,7 +15,6 @@ class Graph:
     data = json.load(file)
 
     drivers = {
-        1: ["Peter Low", 91234457, "SKA1154C"],
         2: ["Alex Tan", 91234457, "SKA4554C"],
         3: ["Jess Low", 91234457, "SKA8888C"],
         4: ["Felix Tan", 88961234, "SKG4894C"],
@@ -29,7 +31,6 @@ class Graph:
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
         self.assignDriverLocation()
-        print(self.driverLocation)
 
     def setJunctionNode(self):
         for i in self.data['junction']:
@@ -106,10 +107,9 @@ class Graph:
         for i in range(len(self.drivers)):
             ranLocation = random.randint(0, len(self.locations))
             if ranLocation not in self.driverLocation:
-                self.driverLocation.update({ranLocation: [i + 1]})
+                self.driverLocation.update({ranLocation: [i + 2]})
             else:
-                self.driverLocation[ranLocation].append(i + 1)
-
+                self.driverLocation[ranLocation].append(i + 2)
 
 g = Graph()
 

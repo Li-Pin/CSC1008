@@ -13,3 +13,4 @@ __pycache__/queueClass.cpython-39.pyc
 .vscode/launch.json
 __pycache__/graphADT.cpython-39.pyc
 __pycache__/queueADT.cpython-39.pyc
+*.db

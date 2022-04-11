@@ -1,22 +1,28 @@
+import imp
 from sqlalchemy import null
 from graphADT import g
-import random
+from flask import session as s
 from djikstra import dijkstra
-
+from graphADT import Graph
 
 class Driver:
 
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.name = name  # replace with forms.get.(driver name)
+        self.id = id
         self.start = None
         self.end = None
         self.pathRoute = []
         self.pathDistance = 0
 
     def startjob(self, start):  # start should be key of location
-        self.start = start
-        # g.driver append driver name
-        # g.driverlocation append if no key exist, new key [driverID] else new key = location : [driverID]
+        graph = Graph().driverLocation
+        if int(start) not in graph:
+            graph.update({int(start): [self.id]})
+            print(graph)
+        else:
+            graph[int(start)].append(self.id)
+        
 
 
     def driverRoute(self, driverLoc, customerLoc):

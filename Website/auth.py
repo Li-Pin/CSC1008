@@ -1,5 +1,5 @@
 import datetime
-
+from lib2to3.pgen2 import driver
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
@@ -9,6 +9,8 @@ from . import db
 from .models import User, TEST_ride2, TEST_shared, drivertble
 from oneMapMethods import locationdet
 import customer
+from driver import Driver
+
 auth = Blueprint('auth', __name__)
 
 
@@ -46,6 +48,7 @@ def driverLogin_post():
     username = request.form.get('username')
     password = request.form.get('password')
     driver = drivertble.query.filter_by(username=username).first()
+    session['driverID'] = driver.id
     session['driverUsername'] = username
 
     # check if driver exists
@@ -93,6 +96,11 @@ def driverHome():
 @auth.route('/driverLocation', methods=['GET', 'POST'])
 @login_required
 def driverLocation():
+    driverUsername = session['driverUsername']
+    driverID = session['driverID']
+    startLoc = session['startLoc']
+    driver = Driver(driverUsername, driverID)
+    driver.startjob(startLoc)
     return render_template("driverLocation.html")
 
 
