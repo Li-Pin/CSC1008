@@ -1,9 +1,9 @@
 import imp
 from sqlalchemy import null
-from graphADT import g
 from flask import session as s
+from graphADT import g
 from djikstra import dijkstra
-from graphADT import Graph
+
 
 class Driver:
 
@@ -16,14 +16,12 @@ class Driver:
         self.pathDistance = 0
 
     def startjob(self, start):  # start should be key of location
-        graph = Graph().driverLocation
+        graph = g.driverLocation
         if int(start) not in graph:
             graph.update({int(start): [self.id]})
             print(graph)
         else:
             graph[int(start)].append(self.id)
-        
-
 
     def driverRoute(self, driverLoc, customerLoc):
         self.start = driverLoc

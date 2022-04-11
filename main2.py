@@ -1,6 +1,6 @@
 from customer import Customer
 from matching import NewBooking
-import graphADT
+from graphADT import g as g2
 from driver import Driver
 
 baseFare = 4.05  # taken from comfortdelgo website
@@ -15,6 +15,13 @@ start = input('Enter Start Point: ')  # to replace with form.get.(=start)
 end = input('Enter End Point: ')  # to replace with form.get.(=end)
 maxDist = input('Enter a max distance for driver: ')
 customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
+path = []
+for i in customerPath:
+    if i in g2.locations:
+        path.append([g2.locations[int(i)][1],g2.locations[int(i)][2]])
+        print(path)
+# array = [int(x) for x in path.split(',')]
+# print(array)
 print('your is distance is: ', customerDistance)
 print('price will be :', baseFare + customerDistance * perKMPrice)
 print('Your Route is :', customerPath)
