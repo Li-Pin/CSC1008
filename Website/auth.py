@@ -3,10 +3,12 @@ import datetime
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
+
+import graphADT
 from . import db
 from .models import User, TEST_ride2, TEST_shared, drivertble
 from oneMapMethods import locationdet
-
+import customer
 auth = Blueprint('auth', __name__)
 
 
@@ -29,6 +31,7 @@ def login_post():
         return redirect(url_for('auth.login'))
     # if user exists, log user in
     login_user(user, remember=True)
+    session['customerName'] = username
     return redirect(url_for('auth.home'))
 
 
@@ -53,6 +56,19 @@ def driverLogin_post():
     # if driver exists, log driver in
     login_user(driver, remember=True)
     return redirect(url_for('auth.driverHome'))
+
+# driver log in
+    # newDriver = Driver(driverName) # get from DB
+    # if driver start job:
+    # newDriver.startJob(start) # get from webpage start loc as ID (1,2,3...), Update Web Page with driverLoc
+    # end
+
+# driver log in if not avail
+#     newDriver = Driver(driverName, driverStart)
+
+# don't have to run this part if we can store driver nodes in webpage global array
+#     driverPath, driverDistance = newDriver.driverRoute(driverLoc, customerLoc) get from DB driverLoc, customerLoc
+#     print('your route is', driverPath, 'your customer is at', customerLoc, your distance is, driverDistance)
 
 
 # Route to driver homepage
@@ -118,30 +134,46 @@ def home():
 @login_required
 def bookride():
     if request.method == 'POST':
-        pickUp = request.form.get('pickUp')
-        dropOff = request.form.get('dropOff')
-        date = request.form.get('date')
-        time = request.form.get('time')
-        pax = request.form.get('pax')
-        paym = request.form.get('paym')
-        carType = request.form.get('carType')
-        searchRange = request.form.get('searchRange')
 
-        fromLocation = locationdet(pickUp)  # Passing to API
-        toLocation = locationdet(dropOff)
-        fromLocationlat = fromLocation[0]  # Assigning array values
-        fromLocationlong = fromLocation[1]
-        toLocationlat = toLocation[0]
-        toLocationlong = toLocation[1]
-        fromLocationname = fromLocation[2]
-        toLocationname = toLocation[2]
+        # pickUp = request.form.get('pickUp')
+        # dropOff = request.form.get('dropOff')
+        # date = request.form.get('date')
+        # time = request.form.get('time')
+        # pax = request.form.get('pax')
+        # paym = request.form.get('paym')
+        # carType = request.form.get('carType')
+        # searchRange = request.form.get('searchRange')
+        #
+        # fromLocation = locationdet(pickUp)  # Passing to API
+        # toLocation = locationdet(dropOff)
+        # fromLocationlat = fromLocation[0]  # Assigning array values
+        # fromLocationlong = fromLocation[1]
+        # toLocationlat = toLocation[0]
+        # toLocationlong = toLocation[1]
+        # fromLocationname = fromLocation[2]
+        # toLocationname = toLocation[2]
+        # Book_Ride = TEST_ride2(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, carType=carType, paym=paym, searchRange=searchRange)
+        # db.session.add(Book_Ride)
+        # db.session.commit()
+        # # flash('Booking Success!', 'success')
+        # return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        # toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+        graph = graphADT()
+        baseFare = 4.05  # taken from comfortdelgo website
+        perKMPrice = 0.7  # taken from comfortdelgo website
 
-        Book_Ride = TEST_ride2(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, carType=carType, paym=paym, searchRange=searchRange)
-        db.session.add(Book_Ride)
-        db.session.commit()
-        # flash('Booking Success!', 'success')
-        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
+        newCustomer = customer.Customer(session.get('customerName', None))
+        start = request.form.get('pickUp')  # to replace with form.get.(=start)
+        end = request.form.get('dropOff')  # to replace with form.get.(=end)
+        maxDist = request.form.get('searchRange')
+        customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
+        for i in customerPath:
+            if i in graph.locations:
+                path = graph.locations[i]['lat']
+        print('your is distance is: ', customerDistance)
+        print('price will be :', baseFare + customerDistance * perKMPrice)
+        print('Your Route is :', customerPath)
+        print('Your starting location is :', customerPath[0])
 
     return render_template("bookride.html")
 
@@ -182,16 +214,32 @@ def booksharedride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
-    fromLocationlat = request.args.get('fromLocationlat', None)
-    fromLocationlong = request.args.get('fromLocationlong', None)
-    toLocationlat = request.args.get('toLocationlat', None)
-    toLocationlong = request.args.get('toLocationlong', None)
-    fromLocationname = request.args.get('fromLocationname', None)
-    toLocationname = request.args.get('toLocationname', None)
+    # fromLocationlat = request.args.get('fromLocationlat', None)
+    # fromLocationlong = request.args.get('fromLocationlong', None)
+    # toLocationlat = request.args.get('toLocationlat', None)
+    # toLocationlong = request.args.get('toLocationlong', None)
+    # fromLocationname = request.args.get('fromLocationname', None)
+    # toLocationname = request.args.get('toLocationname', None)
+    #
+    # return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+    #                        toLocationlat=toLocationlat, toLocationlong=toLocationlong,
+    #                        fromLocationname=fromLocationname, toLocationname=toLocationname)
 
-    return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                           toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                           fromLocationname=fromLocationname, toLocationname=toLocationname)
+
+    booking = NewBooking(int(start), int(maxDist), newCustomer.name)
+    driverStart, driverID, driverName = booking.finddriver()
+
+    if driverStart != 'No driver':
+        print('Driver is at', int(driverStart))
+        # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
+        print('your driver is :', driverName)
+        # End of Customer stuff
+        # newDriver = Driver(driverName, driverStart)
+        # driverPath, driverDistance = newDriver.driverRoute(start)
+        # print('your driver is ', driverDistance, 'KM away')
+        # print('your drivers route is', driverPath)
+    else:
+        print('No driver is available!')
 
 
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
