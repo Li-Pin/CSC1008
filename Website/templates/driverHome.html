@@ -58,7 +58,13 @@
     </html>
 
     <form id=centerDriverHome method="POST">
-        <h3>Please select the location you want to start from:</h3>
+        <h3>Please select your location:</h3>
+        <label for="isAvailable">Ready to start work?</label>
+            <select name="isAvailable" id="isAvailable" required>
+                <option value="TRUE">Yes</option>
+                <option value="FALSE">No</option>
+                </select>
+        <br><br/>
         <label for="startLoc" >Starting Location:</label>
             <select name="startLoc" id="startLoc" required>
                 <option value="1">Punggol Field</option>
@@ -81,6 +87,7 @@
                 <option value="18">Punggol Central</option>
                 <option value="19">Punggol Drive</option>
             </select>
+
         <button type="submit" id="driverButton" class="btn btn-outline-info">Confirm</button>
 </form>
 

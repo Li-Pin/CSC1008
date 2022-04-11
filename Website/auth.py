@@ -61,8 +61,15 @@ def driverLogin_post():
 def driverHome():
     driverUsername = session['driverUsername']
     if request.method == 'POST':
-        session['startLoc'] = request.form.get('startLoc')
+        isAvailable = request.form.get('isAvailable')
+        driverloc = request.form.get('startLoc')
+
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+        db.session.commit()
+
         return redirect(url_for('auth.driverLocation'))
+
     return render_template("driverHome.html")
 
 
@@ -70,9 +77,7 @@ def driverHome():
 @auth.route('/driverLocation', methods=['GET', 'POST'])
 @login_required
 def driverLocation():
-    driverUsername = session['driverUsername']
-    startLoc = session['startLoc']
-    return render_template("driverLocation.html", driverUsername=driverUsername, startLoc=startLoc)
+    return render_template("driverLocation.html")
 
 
 # Route to register page
