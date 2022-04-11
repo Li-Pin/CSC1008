@@ -196,13 +196,16 @@ def bookride():
         plugins.AntPath(
             locations=path
         ).add_to(m)
-        for i in path:
-            folium.Marker(
-                location=i
-            ).add_to(m)
+        folium.Marker(
+            location=path[0]
+        ).add_to(m)
+        folium.Marker(
+            location=path[-1]
+        ).add_to(m)
         m.fit_bounds([path[0], path[-1]])
 
-        return render_template("map.html", map=m._repr_html_())
+        return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
+        endLocation=endLocation)
 
         return redirect(url_for('auth.confirmride', customerDistance=customerDistance, startLocation=startLocation,
         endLocation=endLocation, len=len(path), path=path))
