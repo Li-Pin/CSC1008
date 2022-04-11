@@ -119,11 +119,13 @@
     font-size: 1.5em;
 }
 
-#pickUp, #dropOff, #carType, #pax, #paym, #searchRange, #startLoc{
+#pickUp, #dropOff, #carType, #pax, #paym, #searchRange, #startLoc, #isAvailable{
     border-color: lightgrey;
     padding: 2%;
     border-radius: 5px;
 }
+
+
 
 #mapdiv{
     margin-top: 40px;
