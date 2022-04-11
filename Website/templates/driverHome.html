@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div align="center">
+        <h1>Home</h1>
+        <button type="submit" id="driverLogout" onclick="login.html" class="btn btn-outline-info">Logout</button>
+    </div>
+        <html>
+          <head>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+          </head>
+          <body>
+            <div id='mapdiv' style='height:400px;'></div>
+          </body>
+
+        <script>
+          var center = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
+          var map = L.map('mapdiv').setView([center.x, center.y], 12);
+
+          var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
+            detectRetina: true,
+            maxZoom: 18,
+            minZoom: 11
+          });
+
+          var redPin = L.icon({
+              iconUrl: '../static/Images/redpin.png',
+              iconSize:     [20, 30], // size of the icon
+              iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
+          });
+
+          // add markers for all locations on the map
+          L.marker([1.403392, 103.896814], {icon: redPin}).addTo(map);
+          L.marker([1.40641, 103.89758], {icon: redPin}).addTo(map);
+          L.marker([1.40254, 103.89945], {icon: redPin}).addTo(map);
+          L.marker([1.40604, 103.90087], {icon: redPin}).addTo(map);
+          L.marker([1.40148, 103.90204], {icon: redPin}).addTo(map);
+          L.marker([1.40439, 103.90383], {icon: redPin}).addTo(map);
+          L.marker([1.40727, 103.90540], {icon: redPin}).addTo(map);
+          L.marker([1.39991, 103.90505], {icon: redPin}).addTo(map);
+          L.marker([1.40279, 103.90626], {icon: redPin}).addTo(map);
+          L.marker([1.40587, 103.90770], {icon: redPin}).addTo(map);
+          L.marker([1.39827, 103.90721], {icon: redPin}).addTo(map);
+          L.marker([1.40089, 103.90902], {icon: redPin}).addTo(map);
+          L.marker([1.40354, 103.91095], {icon: redPin}).addTo(map);
+          L.marker([1.39525, 103.91095], {icon: redPin}).addTo(map);
+          L.marker([1.39810, 103.91293], {icon: redPin}).addTo(map);
+          L.marker([1.40073, 103.91482], {icon: redPin}).addTo(map);
+          L.marker([1.39229, 103.91455], {icon: redPin}).addTo(map);
+          L.marker([1.39535, 103.91674], {icon: redPin}).addTo(map);
+          L.marker([1.39799, 103.91865], {icon: redPin}).addTo(map);
+
+          map.fitBounds([[1.403033, 103.889170], [1.399421,  103.921985]]);
+
+          basemap.addTo(map);
+        </script>
+    </html>
+
+    <form id=centerDriverHome method="POST">
+        <h3>Please select the location you want to start from:</h3>
+        <label for="startLoc" >Starting Location:</label>
+            <select name="startLoc" id="startLoc" required>
+                <option value="1">Punggol Field</option>
+                <option value="2">Punggol Central</option>
+                <option value="3">Punggol Walk</option>
+                <option value="4">Punggol Central</option>
+                <option value="5">Punggol Place</option>
+                <option value="6">Punggol Place</option>
+                <option value="7">Punggol Place</option>
+                <option value="8">Punggol Field</option>
+                <option value="9">Punggol Central</option>
+                <option value="10">Punggol Road</option>
+                <option value="11">Punggol Road</option>
+                <option value="12">Punggol Central</option>
+                <option value="13">Edgefield Plains</option>
+                <option value="14">Edgefield Plains</option>
+                <option value="15">Edgefield Plains</option>
+                <option value="16">Punggol Drive</option>
+                <option value="17">Punggol Field</option>
+                <option value="18">Punggol Central</option>
+                <option value="19">Punggol Drive</option>
+            </select>
+        <button type="submit" id="driverButton" class="btn btn-outline-info">Confirm</button>
+</form>
+
+
+{% endblock %}

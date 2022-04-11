@@ -4,9 +4,8 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
 from . import db
-from .models import User, TEST_ride, TEST_shared
+from .models import User, TEST_ride2, TEST_shared, drivertble
 from oneMapMethods import locationdet
-
 
 auth = Blueprint('auth', __name__)
 
@@ -31,6 +30,49 @@ def login_post():
     # if user exists, log user in
     login_user(user, remember=True)
     return redirect(url_for('auth.home'))
+
+
+# Route to driver page
+@auth.route('/driver')
+def driverLogin():
+    return render_template("driver.html")
+
+
+@auth.route('/driver', methods=['GET', 'POST'])
+def driverLogin_post():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    driver = drivertble.query.filter_by(username=username).first()
+    session['driverUsername'] = username
+
+    # check if driver exists
+    # if driver don't exist, prompt driver to try again
+    if not driver or not driver.password:
+        flash('Please check your login details and try again.', 'danger')
+        return redirect(url_for('auth.driverLogin'))
+    # if driver exists, log driver in
+    login_user(driver, remember=True)
+    return redirect(url_for('auth.driverHome'))
+
+
+# Route to driver homepage
+@auth.route('/driverHome', methods=['GET', 'POST'])
+@login_required
+def driverHome():
+    driverUsername = session['driverUsername']
+    if request.method == 'POST':
+        session['startLoc'] = request.form.get('startLoc')
+        return redirect(url_for('auth.driverLocation'))
+    return render_template("driverHome.html")
+
+
+# Route to driver location
+@auth.route('/driverLocation', methods=['GET', 'POST'])
+@login_required
+def driverLocation():
+    driverUsername = session['driverUsername']
+    startLoc = session['startLoc']
+    return render_template("driverLocation.html", driverUsername=driverUsername, startLoc=startLoc)
 
 
 # Route to register page
@@ -78,6 +120,7 @@ def bookride():
         pax = request.form.get('pax')
         paym = request.form.get('paym')
         carType = request.form.get('carType')
+        searchRange = request.form.get('searchRange')
 
         fromLocation = locationdet(pickUp)  # Passing to API
         toLocation = locationdet(dropOff)
@@ -88,15 +131,13 @@ def bookride():
         fromLocationname = fromLocation[2]
         toLocationname = toLocation[2]
 
-        Book_Ride = TEST_ride(pickUp=pickUp, dropOff=dropOff , date=date,time=time, pax=pax,carType=carType,paym=paym)
+        Book_Ride = TEST_ride2(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, carType=carType, paym=paym, searchRange=searchRange)
         db.session.add(Book_Ride)
         db.session.commit()
         # flash('Booking Success!', 'success')
-        return redirect(url_for('auth.confirmride',fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
+        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
         toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
-        # return redirect(url_for("auth.confirmride"))
-        #return redirect(url_for("auth.confirmride"))
-        # delete this line  hahaha just testing for git!!!
+
     return render_template("bookride.html")
 
 
@@ -122,7 +163,8 @@ def booksharedride():
         fromLocationname = fromLocation[2]
         toLocationname = toLocation[2]
 
-        Share_Ride = TEST_shared(pickUp=pickUp, carType=carType, dropOff=dropOff, pax=pax, date=date, time=time, paym=paym)
+        Share_Ride = TEST_shared(pickUp=pickUp, carType=carType, dropOff=dropOff, pax=pax, date=date, time=time,
+                                 paym=paym)
         db.session.add(Share_Ride)
         db.session.commit()
         return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
@@ -166,5 +208,3 @@ def confirmsharedride():
 @login_required
 def settings():
     return render_template("settings.html")
-
-

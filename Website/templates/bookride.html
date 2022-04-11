@@ -4,52 +4,125 @@
     <div align="center">
         <h1>Book a Ride</h1>
     </div>
+    <html>
+          <head>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+          </head>
+          <body>
+            <div id='mapdiv' style='height:400px;'></div>
+          </body>
+
+        <script>
+          var center = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
+          var map = L.map('mapdiv').setView([center.x, center.y], 12);
+
+          var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
+            detectRetina: true,
+            maxZoom: 18,
+            minZoom: 11
+          });
+
+          var redPin = L.icon({
+              iconUrl: '../static/Images/redpin.png',
+              iconSize:     [20, 30], // size of the icon
+              iconAnchor:   [10, 29], // point of the icon which will correspond to marker's location
+          });
+
+          // add markers for all locations on the map
+          L.marker([1.403392, 103.896814], {icon: redPin}).addTo(map);
+          L.marker([1.40641, 103.89758], {icon: redPin}).addTo(map);
+          L.marker([1.40254, 103.89945], {icon: redPin}).addTo(map);
+          L.marker([1.40604, 103.90087], {icon: redPin}).addTo(map);
+          L.marker([1.40148, 103.90204], {icon: redPin}).addTo(map);
+          L.marker([1.40439, 103.90383], {icon: redPin}).addTo(map);
+          L.marker([1.40727, 103.90540], {icon: redPin}).addTo(map);
+          L.marker([1.39991, 103.90505], {icon: redPin}).addTo(map);
+          L.marker([1.40279, 103.90626], {icon: redPin}).addTo(map);
+          L.marker([1.40587, 103.90770], {icon: redPin}).addTo(map);
+          L.marker([1.39827, 103.90721], {icon: redPin}).addTo(map);
+          L.marker([1.40089, 103.90902], {icon: redPin}).addTo(map);
+          L.marker([1.40354, 103.91095], {icon: redPin}).addTo(map);
+          L.marker([1.39525, 103.91095], {icon: redPin}).addTo(map);
+          L.marker([1.39810, 103.91293], {icon: redPin}).addTo(map);
+          L.marker([1.40073, 103.91482], {icon: redPin}).addTo(map);
+          L.marker([1.39229, 103.91455], {icon: redPin}).addTo(map);
+          L.marker([1.39535, 103.91674], {icon: redPin}).addTo(map);
+          L.marker([1.39799, 103.91865], {icon: redPin}).addTo(map);
+
+          map.fitBounds([[1.403033, 103.889170], [1.399421,  103.921985]]);
+
+          basemap.addTo(map);
+        </script>
+    </html>
+
     <form id=centerRide method="POST">
-        <label >Pick up:</label>
-                 <select name="pickUp" id="pickUp">
-        <option value="569732">Location 1</option>
-        <option value="560208">Location 2</option>
-        <option value="560217">Location 3</option>
-        <option value="560224">Location 4</option>
-        <option value="560220">Location 5</option></select><br/>
-        <label >Drop Off:</label>
-                 <select name="dropOff" id="dropOff">
-        <option value="560305">Location 1</option>
-        <option value="560217">Location 2</option>
-        <option value="560330">Location 3</option>
-        <option value="560337">Location 4</option>
-        <option value="560208">Location 5</option></select><br/>
-            <label >Date:</label>
-                <input type="date" class="form-control"  format='%Y-%m-%d' name="date" required><br/>
-        <label >Time:</label>
-                <input type="time" class="form-control"  format='%H-%M' name="time" required><br/>
-        <label for="carType" >Car type:</label>
-        <select name="carType" id="carType">
-        <option value="Volvo">Volvo</option>
-        <option value="Hyundai">Hyundai</option>
-        <option value="Toyota">Toyota</option>
-        <option value="Chevrolet">Chevrolet</option></select>
-        <br><br/>
-        <label >Pax:</label>
-        <select name="pax" id="pax">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option></select>
-        <br><br/>
-        <label >Payment:</label>
-        <select name="paym" id="paym">
-        <option value="Cash">Cash</option>
-        <option value="PayNow">PayNow</option>
-        <option value="PayLah">PayLah</option>
-        <option value="Credit card">CreditCard</option></select><br/>
-        <!--<label >Email:</label>
-            <input  class="form-control"  name="email" required><br/><br/>
--->
-        <br><br/>
-        <button type="submit" class="btn btn-outline-info">Next</button>
-    </form>
+        <div id="container">
+        <div id="ridePart1">
+            <label for="pickUp">Pick up:</label><br>
+            <select name="pickUp" id="pickUp" required>
+                    <option value="560209">Location 1</option>
+                    <option value="560208">Location 2</option>
+                    <option value="560217">Location 3</option>
+                    <option value="560224">Location 4</option>
+                    <option value="560220">Location 5</option>
+            </select><br>
 
+            <label for="dropOff">Drop Off:</label><br>
+                <select name="dropOff" id="dropOff" required>
+                    <option value="560305">Location 1</option>
+                    <option value="560217">Location 2</option>
+                    <option value="560330">Location 3</option>
+                    <option value="560337">Location 4</option>
+                    <option value="560208">Location 5</option>
+                </select><br>
 
+            <label for="date">Date:</label>
+                <input type="date" class="form-control"  format='%Y-%m-%d' name="date" id="date" required>
+            <label for="time">Time:</label>
+                <input type="time" class="form-control"  format='%H-%M' name="time" id="time" required>
+        </div>
+
+        <div id="ridePart2">
+            <label for="carType" >Car type:</label><br>
+                <select name="carType" id="carType">
+                    <option value="Volvo">Volvo</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Chevrolet">Chevrolet</option>
+                </select><br>
+
+            <label for="pax">Pax:</label><br>
+                <select name="pax" id="pax">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select><br>
+
+            <label for="paym">Payment:</label><br>
+                <select name="paym" id="paym">
+                    <option value="Cash">Cash</option>
+                    <option value="PayNow">PayNow</option>
+                    <option value="PayLah">PayLah</option>
+                    <option value="Credit card">CreditCard</option>
+                </select><br>
+
+            <label for="searchRange">Search Range:</label><br>
+                <select name="searchRange" id="searchRange">
+                    <option value="noPref">No Preference</option>
+                    <option value="500m">500M</option>
+                    <option value="1km">1KM</option>
+                    <option value="1.5km">1.5KM</option>
+                    <option value="2km">2KM</option>
+                    <option value="2.5km">2.5KM</option>
+                    <option value="3km">3KM</option>
+                </select>
+        </div>
+        </div>
+        <div id="btnSect" align="center">
+            <button type="submit" id ="rideButton" class="btn btn-outline-info">Next</button>
+        </div>
+</form>
 {% endblock %}

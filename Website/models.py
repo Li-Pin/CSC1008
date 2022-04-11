@@ -13,8 +13,19 @@ class User(UserMixin, db.Model):
     # rides = db.relationship('Rides')
 
 
-# ride database
-class TEST_ride(UserMixin, db.Model):
+# driver database
+class drivertble(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80))
+    password = db.Column(db.String(80))
+    carplate = db.Column(db.String(80))
+    isAvailable = db.Column(db.String(80))
+    journeyRoute = db.Column(db.String(80))
+    driverloc = db.Column(db.String(80))
+
+
+# book ride database
+class TEST_ride2(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pickUp = db.Column(db.String(80))
     dropOff = db.Column(db.String(80))
@@ -23,6 +34,7 @@ class TEST_ride(UserMixin, db.Model):
     pax = db.Column(db.String(80))
     carType = db.Column(db.String(80))
     paym = db.Column(db.String(80))
+    searchRange = db.Column(db.String(80))
 
 
 # shared ride database

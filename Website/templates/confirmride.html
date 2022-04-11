@@ -7,9 +7,9 @@
 
         <html>
           <head>
-            <title>OneMap2 XYZ (Default)</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-            <script src="https://cdn.onemap.sg/leaflet/onemap-leaflet.js"></script>
+            <title>Confirm Ride</title>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
           </head>
           <body>
           <h3>Ride Info</h3>
@@ -31,6 +31,43 @@
           });
 
           map.setMaxBounds([[1.56073, 104.1147], [1.16, 103.502]]);
+
+          // add coordinates here
+          var latlngs = [
+              [1.380853, 103.844318],
+              [1.380338, 103.845949],
+              [1.379094, 103.846978],
+              [1.377077, 103.847665],
+              [1.374675, 103.847880],
+              [1.372573, 103.848180],
+              [1.371586, 103.848405],
+              [1.370514, 103.848942],
+              [1.369570, 103.849435]]
+
+          // create a blue polyline from an arrays of LatLng points
+          var polyline = L.polyline(latlngs, {color: '#1586D8'}).addTo(map);
+
+          // drop pin at start location
+          var redPin = L.icon({
+              iconUrl: '../static/Images/redpin.png',
+              iconSize:     [35, 50], // size of the icon
+              iconAnchor:   [18, 50], // point of the icon which will correspond to marker's location
+          });
+
+          // drop pin at end location
+          var bluePin = L.icon({
+              iconUrl: '../static/Images/bluepin.png',
+              iconSize:     [35, 50], // size of the icon
+              iconAnchor:   [18, 50], // point of the icon which will correspond to marker's location
+          });
+
+          // start marker
+          L.marker([1.380853, 103.844318], {icon: redPin}).addTo(map);
+          // end marker
+          L.marker([1.369570, 103.849435], {icon: bluePin}).addTo(map);
+
+          // zoom map to the polyline
+          map.fitBounds(polyline.getBounds());
 
           basemap.addTo(map);
 

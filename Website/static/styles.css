@@ -8,25 +8,26 @@
     text-align: center;
 }
 
-#centerLogin{
+#centerLogin, #centerDriver{
     position: absolute;
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-#centerRegister{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#btnSect{
+    margin-bottom: 5%;
 }
 
 #centerRide{
+    margin-top: 2%;
+}
+
+#centerDriverHome{
     position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 60%;
+    left: 52%;
+    transform: translate(-50%, 50%);
 }
 
 #centerSharedRide {
@@ -74,6 +75,23 @@
     font-size: 1.5em;
 }
 
+#rideButton{
+    width: 8%;
+}
+
+#container{
+    margin: 0 auto;
+    width: 45%;
+    height: 300px;
+    overflow: visible;
+}
+
+#container select{
+    width: 200px;
+    height: 40px;
+    color: grey;
+}
+
 #booksharedride, #savedlocations{
     width: 220px;
     height: 120px;
@@ -100,4 +118,36 @@
     text-align: center;
     font-size: 1.5em;
 }
+
+#pickUp, #dropOff, #carType, #pax, #paym, #searchRange, #startLoc{
+    border-color: lightgrey;
+    padding: 2%;
+    border-radius: 5px;
+}
+
+#mapdiv{
+    margin-top: 40px;
+}
+
+#ridePart1{
+    float:left;
+}
+
+#ridePart2{
+    float: right;
+}
+
+#driverButton{
+    margin-top: 7%;
+    margin-left: 40%;
+    margin-bottom: 5%;
+}
+
+#driverLogout{
+    position: absolute;
+    top: 5.5%;
+    right: 10%;
+    transform: translate(-70%, -10%);
+}
+
 
