@@ -1,6 +1,5 @@
 import json
 import os
-import random
 from math import radians, cos, sin, asin, sqrt
 
 from mergeSort import mergeSort
@@ -10,23 +9,19 @@ class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
 
-    drivers = {
-        2: ["Alex Tan", 91234457, "SKA4554C"],
-        3: ["Jess Low", 91234457, "SKA8888C"],
-        4: ["Felix Tan", 88961234, "SKG4894C"],
-        5: ["Lim Tan Lau", 89551445, "STH4354C"]
-    }
+    
 
     def __init__(self):
         self.edgeGraph = dict()
         self.locations = dict()
+        self.drivers = dict()
         self.driverLocation = dict()
         self.setJunctionNode()
         self.v = len(self.locations)
         self.visited = []
         self.edges = [[-1 for i in range(self.v)] for j in range(self.v)]
         self.setEdge()
-        self.assignDriverLocation()
+        # self.assignDriverLocation()
 
     def setJunctionNode(self):
         for i in self.data['junction']:
@@ -98,14 +93,6 @@ class Graph:
             if i == self.end:
                 self.printPath(parent, i, pathArray)
                 return dist[i]
-
-    def assignDriverLocation(self):
-        for i in range(len(self.drivers)):
-            ranLocation = random.randint(0, len(self.locations))
-            if ranLocation not in self.driverLocation:
-                self.driverLocation.update({ranLocation: [i + 2]})
-            else:
-                self.driverLocation[ranLocation].append(i + 2)
 
 
 g = Graph()
