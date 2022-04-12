@@ -11,10 +11,10 @@ class Graph:
     data = json.load(file)
 
     drivers = {
-        2: ["Alex Tan", 91234457, "SKA4554C"],
-        3: ["Jess Low", 91234457, "SKA8888C"],
-        4: ["Felix Tan", 88961234, "SKG4894C"],
-        5: ["Lim Tan Lau", 89551445, "STH4354C"]
+        2: ["Alan", 91234457, "SKA4554C"],
+        3: ["Charlie", 91234457, "SKA8888C"],
+        4: ["Bob", 88961234, "SKG4894C"],
+        # 5: ["Lim Tan Lau", 89551445, "STH4354C"]
     }
 
     def __init__(self):
