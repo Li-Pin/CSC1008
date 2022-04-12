@@ -142,73 +142,11 @@ def home():
 @login_required
 def bookride():
     if request.method == 'POST':
-
-        # pickUp = request.form.get('pickUp')
-        # dropOff = request.form.get('dropOff')
-        # date = request.form.get('date')
-        # time = request.form.get('time')
-        # pax = request.form.get('pax')
-        # paym = request.form.get('paym')
-        # carType = request.form.get('carType')
-        # searchRange = request.form.get('searchRange')
-        #
-        # fromLocation = locationdet(pickUp)  # Passing to API
-        # toLocation = locationdet(dropOff)
-        # fromLocationlat = fromLocation[0]  # Assigning array values
-        # fromLocationlong = fromLocation[1]
-        # toLocationlat = toLocation[0]
-        # toLocationlong = toLocation[1]
-        # fromLocationname = fromLocation[2]
-        # toLocationname = toLocation[2]
-        # Book_Ride = TEST_ride2(pickUp=pickUp, dropOff=dropOff, date=date, time=time, pax=pax, carType=carType, paym=paym, searchRange=searchRange)
-        # db.session.add(Book_Ride)
-        # db.session.commit()
-        # # flash('Booking Success!', 'success')
-        # return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-        # toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
-        graph = graphADT.g
-        baseFare = 4.05  # taken from comfortdelgo website
-        perKMPrice = 0.7  # taken from comfortdelgo website
-
-        newCustomer = customer.Customer(session.get('customerName', None))
         start = request.form.get('pickUp')  # to replace with form.get.(=start)
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
         maxDist = request.form.get('searchRange')
-        customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
-        path = []
-        for i in customerPath:
-            if i in graph.locations:
-                path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-                print(path)
-        print(graph.locations[int(start)][0])
-        startLocation = (graph.locations[int(start)][0])
-        endLocation = (graph.locations[int(end)][0])
-        print('your is distance is: ', customerDistance)
-        print('price will be :', baseFare + customerDistance * perKMPrice)
-        print('Your Route is :', customerPath)
-        print('Your starting location is :', customerPath[0])
 
-        m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-        # folium.PolyLine(
-        #     locations=path
-        # ).add_to(m)
-
-        plugins.AntPath(
-            locations=path
-        ).add_to(m)
-        folium.Marker(
-            location=path[0]
-        ).add_to(m)
-        folium.Marker(
-            location=path[-1]
-        ).add_to(m)
-        m.fit_bounds([path[0], path[-1]])
-
-        return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
-        endLocation=endLocation)
-
-        return redirect(url_for('auth.confirmride', customerDistance=customerDistance, startLocation=startLocation,
-        endLocation=endLocation, len=len(path), path=path))
+        return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end,maxDist=maxDist))
 
     return render_template("bookride.html")
 
@@ -250,23 +188,48 @@ def booksharedride():
 @login_required
 def confirmride():
 
-    # fromLocationlat = request.args.get('fromLocationlat', None)
-    # fromLocationlong = request.args.get('fromLocationlong', None)
-    # toLocationlat = request.args.get('toLocationlat', None)
-    # toLocationlong = request.args.get('toLocationlong', None)
-    # fromLocationname = request.args.get('fromLocationname', None)
-    # toLocationname = request.args.get('toLocationname', None)
+    graph = graphADT.g
+    baseFare = 4.05  # taken from comfortdelgo website
+    perKMPrice = 0.7  # taken from comfortdelgo website
+    newCustomer = customer.Customer(session.get('customerName', None))
+    start = request.args.get('startPoint', None)
+    end = request.args.get('endPoint', None)
+    maxDist = request.args.get('maxDist', None)
+    customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
+    
+    path = []
+    for i in customerPath:
+        if i in graph.locations:
+            path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
+            print(path)
+    print(graph.locations[int(start)][0])
+    startLocation = (graph.locations[int(start)][0])
+    endLocation = (graph.locations[int(end)][0])
+    print('your is distance is: %0.2f', customerDistance)
+    print('price will be :', baseFare + customerDistance * perKMPrice)
+    print('Your Route is :', customerPath)
+    print('Your starting location is :', customerPath[0])
 
-    rideDistance = request.args.get('rideDistance', None)
-    startLocation = request.args.get('startLocation', None)
-    endLocation = request.args.get('endLocation', None)
+    m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+        # folium.PolyLine(
+        #     locations=path
+        # ).add_to(m)
 
-    #
-    # return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-    #                        toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-    #                        fromLocationname=fromLocationname, toLocationname=toLocationname)
+    plugins.AntPath(
+        locations=path
+    ).add_to(m)
+    folium.Marker(
+        location=path[0]
+    ).add_to(m)
+    folium.Marker(
+        location=path[-1]
+    ).add_to(m)
+    m.fit_bounds([path[0], path[-1]])
 
-    print(customerPath)
+    return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
+    endLocation=endLocation)
+
+
     # booking = NewBooking(int(start), int(maxDist), newCustomer.name)
     # driverStart, driverID, driverName = booking.finddriver()
     #
@@ -282,7 +245,8 @@ def confirmride():
     # else:
     #     print('No driver is available!')
 
-    return render_template("confirmride.html",rideDistance=rideDistance, startLocation=startLocation, endLocation=endLocation)
+    return render_template("confirmride.html",customerDistance=customerDistance, startLocation=startLocation, endLocation=endLocation)
+
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 @login_required
 def confirmsharedride():
