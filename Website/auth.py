@@ -4,7 +4,7 @@ from flask import render_template, url_for, request, Blueprint, flash, redirect,
 from sqlalchemy import null, true
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
-import graphADT
+from graphADT import g as graph
 from . import db
 from .models import User, drivertble
 from oneMapMethods import locationdet
@@ -46,41 +46,33 @@ def driverLogin():
     return render_template("driver.html")
 
 
+
 @auth.route('/driver', methods=['GET', 'POST'])
 def driverLogin_post():
     username = request.form.get('username')
     password = request.form.get('password')
-    driver = drivertble.query.filter_by(username=username).first()
-    session['driverAvailable'] = driver.isAvailable
-    available = session['driverAvailable']
-    session['driverID'] = driver.id
-    session['driverUsername'] = username
-    if available == 'TRUE': # if driver isavailable
-        return redirect(url_for('auth.driverHome')) # redirect to location of curr driver
-    if available == 'FALSE':
-        return redirect(url_for('auth.driverHome'))
-    session['driverPath'] = driver.journeyRoute
-    print(driver.journeyRoute)
-    
+    driver = drivertble.query.filter_by(username=username).first()  # getting driver details
     if not driver or not driver.password:
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.driverLogin'))
     # if driver exists, log driver in
     login_user(driver, remember=True)
+    session['driverAvailable'] = driver.isAvailable   # setting driver availability
+    available = session['driverAvailable']
+    # setting session variables
+    session['driverUsername'] = username
+    session['driverID'] = driver.id
+
+    if available == 'TRUE':  # if driver working but not on job
+        session['driverloc']=driver.driverloc
+        return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
+
+    elif available == 'FALSE':  # if driver not working
+        return redirect(url_for('auth.driverHome'))
+    else:
+        session['driverPath'] = driver.journeyRoute
+
     return redirect(url_for('auth.driverRoute'))
-
-# driver log in
-    # newDriver = Driver(driverName) # get from DB
-    # if driver start job:
-    # newDriver.startJob(start) # get from webpage start loc as ID (1,2,3...), Update Web Page with driverLoc
-    # end
-
-# driver log in if not avail
-#     newDriver = Driver(driverName, driverStart)
-
-# don't have to run this part if we can store driver nodes in webpage global array
-#     driverPath, driverDistance = newDriver.driverRoute(driverLoc, customerLoc) get from DB driverLoc, customerLoc
-#     print('your route is', driverPath, 'your customer is at', customerLoc, your distance is, driverDistance)
 
 
 # Route to driver homepage
@@ -95,10 +87,10 @@ def driverHome():
         isAvailable = request.form.get('isAvailable')
         driverloc = request.form.get('startLoc')
 
-        drivertble.query.filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-        drivertble.query.filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
         db.session.commit()
-        
+
         return redirect(url_for('auth.driverLocation',startLoc=driverloc))
 
     return render_template("driverHome.html")
@@ -107,8 +99,8 @@ def driverHome():
 @auth.route('/driverRoute', methods=['GET', 'POST'])
 @login_required
 def driverRoute():
-    if request.method == 'POST':
-        return redirect(url_for("auth.driverLogin"))
+    # if request.method == 'POST':
+    #     return redirect(url_for("auth.driverLogin"))
 
     driverPath = session['driverPath']
     print(driverPath)
@@ -117,18 +109,17 @@ def driverRoute():
     driverPath=driverPath.replace(',', '')
     driverPath = driverPath.split(' ')
     print(driverPath)
-    graph = graphADT.g
+
     path = []
     for i in driverPath:
         if i != '':
             if int(i) in graph.locations:
                 path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-    print(path)
-    print(type(path))
+
     for i in range(0,len(path)):
         if path[i] == path[i-1]:
             temp = path[i]
-    print(temp)
+
     m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
     plugins.AntPath(
         locations=path
@@ -147,7 +138,11 @@ def driverRoute():
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
 
-    return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Driver is on the way')
+    return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Get to your customer')
+
+
+
+
 
 
 # Route to driver location
@@ -156,12 +151,19 @@ def driverRoute():
 def driverLocation():
     driverUsername = session['driverUsername']
     driverID = session['driverID']
-    startLoc = request.args.get('startLoc')
-
+    driverAt = session['driverloc']
+    startLocation = (graph.locations[int(driverAt)][0])
+    path = []
+    path.append([graph.locations[int(driverAt)][1], graph.locations[int(driverAt)][2]])
+    m = folium.Map(location=path[0], tiles='OpenStreetMap', zoom_start=18, control_scale=True)
+    folium.Marker(
+        location=path[0],
+        icon=folium.Icon(color="green", icon="map-marker"),
+        popup=startLocation, tooltip="Your Location"
+    ).add_to(m)
     Driver(driverUsername, driverID)
 
-    return render_template("driverLocation.html")
-
+    return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername, startLocation=startLocation)
 
 # Route to register page
 @auth.route('/register', methods=['GET', 'POST'])
@@ -202,8 +204,8 @@ def home():
 @login_required
 def bookride():
     if request.method == 'POST':
-        start = request.form.get('pickUp')
-        end = request.form.get('dropOff')
+        start = request.form.get('pickUp')  # to replace with form.get.(=start)
+        end = request.form.get('dropOff')  # to replace with form.get.(=end)
         maxDist = request.form.get('searchRange')
 
         return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end,maxDist=maxDist))
@@ -214,14 +216,14 @@ def bookride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
-    graph = graphADT.g
+
     getDriver = drivertble.query.all()
     for driver in getDriver:
         graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
-        if(driver.isAvailable.lower() == 'true'):
+        if driver.isAvailable.lower() == 'true':
             if int(driver.driverloc) not in graph.driverLocation:
                 graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
-            elif (int(driver.id) not in graph.driverLocation[int(driver.driverloc)]):
+            elif int(driver.id) not in graph.driverLocation[int(driver.driverloc)]:
                 graph.driverLocation[int(driver.driverloc)].append(int(driver.id))
 
     baseFare = 4.05  # taken from comfortdelgo website
@@ -285,7 +287,7 @@ def rideDetails():
     rideCost = request.args.get('rideCost', None)
     if maxDist =="noPref":
         maxDist=99999999
-    graph = graphADT.g
+
     customerName = session['customerName']
     start = session['customerStart']
     end = session['customerEnd']
@@ -338,11 +340,8 @@ def rideDetails():
                 icon = folium.Icon(color="green", icon="map-marker"),
                 popup=startLocation, tooltip="Your Location"
             ).add_to(m)
-            print(customerPath)
-            customerPath.insert(0,int(start))
-            print(customerPath)
+            customerPath.insert(0, int(start))
             totalPath = customerPath
-            print(totalPath)
             # totalPath = np.concatenate((driverPath,customerPath))
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
