@@ -54,20 +54,14 @@ def driverLogin_post():
     session['driverAvailable'] = driver.isAvailable
     available = session['driverAvailable']
     session['driverID'] = driver.id
-    if available == '1': # if driver isavailable
+    session['driverUsername'] = username
+    if available == 'TRUE': # if driver isavailable
+        return redirect(url_for('auth.driverHome')) # redirect to location of curr driver
+    if available == 'FALSE':
         return redirect(url_for('auth.driverHome'))
     session['driverPath'] = driver.journeyRoute
     print(driver.journeyRoute)
-    session['driverUsername'] = username
-
-    # start = driverPath[0]
-    # end = driverPath[-1]
-    # startLocation = (graph.locations[int(start)][0])
-    # endLocation = (graph.locations[int(end)][0])
-    # driverLocation = (graph.locations[driverStart][0])
-
-    # check if driver exists
-    # if driver don't exist, prompt driver to try again
+    
     if not driver or not driver.password:
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.driverLogin'))
@@ -101,10 +95,10 @@ def driverHome():
         isAvailable = request.form.get('isAvailable')
         driverloc = request.form.get('startLoc')
 
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+        drivertble.query.filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+        drivertble.query.filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
         db.session.commit()
-
+        
         return redirect(url_for('auth.driverLocation',startLoc=driverloc))
 
     return render_template("driverHome.html")
@@ -333,7 +327,7 @@ def rideDetails():
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': False})
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
             db.session.commit()
         else:  # driver at current location
             path = []
@@ -351,7 +345,7 @@ def rideDetails():
             print(totalPath)
             # totalPath = np.concatenate((driverPath,customerPath))
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': False})
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
             db.session.commit()
             return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
                                    startLocation=startLocation,
