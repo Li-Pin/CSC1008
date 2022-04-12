@@ -16,7 +16,6 @@ from matching import NewBooking
 
 auth = Blueprint('auth', __name__)
 
-customerPath = []
 # Route to login page
 @auth.route('/')
 def login():
@@ -101,8 +100,8 @@ def driverLocation():
     driverUsername = session['driverUsername']
     driverID = session['driverID']
     startLoc = request.args.get('startLoc')
-    driver = Driver(driverUsername, driverID)
-    #driver.startjob(startLoc)
+
+    Driver(driverUsername, driverID)
 
     return render_template("driverLocation.html")
 

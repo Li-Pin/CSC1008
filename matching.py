@@ -33,7 +33,7 @@ class NewBooking:
             u = queue.dequeue()
             bfs_traversal_output.append(u)
             for v in graph.edgeGraph[u]:
-                if not visited[v[0]]:
+                if not visited[v[0]]:       
                     if v[0] in graph.driverLocation and v[1] < self.max and len(graph.driverLocation[v[0]]) > 0:  # v[0] = current search location
                             driverID = graph.driverLocation[v[0]].pop(0)  # this will pop driverID then find details from driverID array
                             driverisat = v[0]
