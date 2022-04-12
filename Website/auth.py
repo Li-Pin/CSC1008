@@ -1,19 +1,19 @@
-import datetime
-from lib2to3.pgen2 import driver
+
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
-
 import graphADT
 from . import db
 from .models import User, TEST_ride2, TEST_shared, drivertble
 from oneMapMethods import locationdet
 import customer
 from driver import Driver
+import folium
+from folium import plugins
 
 auth = Blueprint('auth', __name__)
 
-
+customerPath = []
 # Route to login page
 @auth.route('/')
 def login():
@@ -166,7 +166,7 @@ def bookride():
         # # flash('Booking Success!', 'success')
         # return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
         # toLocationlat=toLocationlat, toLocationlong=toLocationlong, fromLocationname=fromLocationname, toLocationname=toLocationname))
-        graph = graphADT()
+        graph = graphADT.g
         baseFare = 4.05  # taken from comfortdelgo website
         perKMPrice = 0.7  # taken from comfortdelgo website
 
@@ -175,13 +175,40 @@ def bookride():
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
         maxDist = request.form.get('searchRange')
         customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
+        path = []
         for i in customerPath:
             if i in graph.locations:
-                path = graph.locations[i]['lat']
+                path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
+                print(path)
+        print(graph.locations[int(start)][0])
+        startLocation = (graph.locations[int(start)][0])
+        endLocation = (graph.locations[int(end)][0])
         print('your is distance is: ', customerDistance)
         print('price will be :', baseFare + customerDistance * perKMPrice)
         print('Your Route is :', customerPath)
         print('Your starting location is :', customerPath[0])
+
+        m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+        # folium.PolyLine(
+        #     locations=path
+        # ).add_to(m)
+
+        plugins.AntPath(
+            locations=path
+        ).add_to(m)
+        folium.Marker(
+            location=path[0]
+        ).add_to(m)
+        folium.Marker(
+            location=path[-1]
+        ).add_to(m)
+        m.fit_bounds([path[0], path[-1]])
+
+        return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
+        endLocation=endLocation)
+
+        return redirect(url_for('auth.confirmride', customerDistance=customerDistance, startLocation=startLocation,
+        endLocation=endLocation, len=len(path), path=path))
 
     return render_template("bookride.html")
 
@@ -222,34 +249,40 @@ def booksharedride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
+
     # fromLocationlat = request.args.get('fromLocationlat', None)
     # fromLocationlong = request.args.get('fromLocationlong', None)
     # toLocationlat = request.args.get('toLocationlat', None)
     # toLocationlong = request.args.get('toLocationlong', None)
     # fromLocationname = request.args.get('fromLocationname', None)
     # toLocationname = request.args.get('toLocationname', None)
+
+    rideDistance = request.args.get('rideDistance', None)
+    startLocation = request.args.get('startLocation', None)
+    endLocation = request.args.get('endLocation', None)
+
     #
     # return render_template("confirmride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
     #                        toLocationlat=toLocationlat, toLocationlong=toLocationlong,
     #                        fromLocationname=fromLocationname, toLocationname=toLocationname)
 
+    print(customerPath)
+    # booking = NewBooking(int(start), int(maxDist), newCustomer.name)
+    # driverStart, driverID, driverName = booking.finddriver()
+    #
+    # if driverStart != 'No driver':
+    #     print('Driver is at', int(driverStart))
+    #     # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
+    #     print('your driver is :', driverName)
+    #     # End of Customer stuff
+    #     # newDriver = Driver(driverName, driverStart)
+    #     # driverPath, driverDistance = newDriver.driverRoute(start)
+    #     # print('your driver is ', driverDistance, 'KM away')
+    #     # print('your drivers route is', driverPath)
+    # else:
+    #     print('No driver is available!')
 
-    booking = NewBooking(int(start), int(maxDist), newCustomer.name)
-    driverStart, driverID, driverName = booking.finddriver()
-
-    if driverStart != 'No driver':
-        print('Driver is at', int(driverStart))
-        # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
-        print('your driver is :', driverName)
-        # End of Customer stuff
-        # newDriver = Driver(driverName, driverStart)
-        # driverPath, driverDistance = newDriver.driverRoute(start)
-        # print('your driver is ', driverDistance, 'KM away')
-        # print('your drivers route is', driverPath)
-    else:
-        print('No driver is available!')
-
-
+    return render_template("confirmride.html",rideDistance=rideDistance, startLocation=startLocation, endLocation=endLocation)
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 @login_required
 def confirmsharedride():

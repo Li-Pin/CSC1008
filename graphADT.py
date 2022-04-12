@@ -1,13 +1,9 @@
+import json
+import os
 import random
-
-from sqlalchemy import true
-from Website import auth
-from queueADT import Queue
 from math import radians, cos, sin, asin, sqrt
-import json, os
-from mergeSort import mergeSort
-from Website.models import drivertble
 
+from mergeSort import mergeSort
 
 
 class Graph:
@@ -110,6 +106,7 @@ class Graph:
                 self.driverLocation.update({ranLocation: [i + 2]})
             else:
                 self.driverLocation[ranLocation].append(i + 2)
+
 
 g = Graph()
 

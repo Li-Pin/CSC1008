@@ -18,25 +18,25 @@
             "lat": 1.40254,
             "lon": 103.89945,
             "street_name": "BLK 268D Punggol Walk",
-            "edge": [0,5]
+            "edge": [0,3,4]
         },{
             "id": 3,
             "lat": 1.40604,
             "lon": 103.90087,
             "street_name": "BLK 73 Punggol Central",
-            "edge": [1,2,4]
+            "edge": [1,2,5]
         },{
             "id": 4,
             "lat": 1.40148,
             "lon": 103.90204,
             "street_name": "BLK 298A Punggol Place",
-            "edge": [2,5,6]
+            "edge": [2,5,7]
         },{
             "id": 5,
             "lat": 1.40439,
             "lon": 103.90383,
             "street_name": "BLK 302A Punggol Place",
-            "edge": [3,4,6]
+            "edge": [3,4,6,8]
         },{
             "id": 6,
             "lat": 1.40727,
