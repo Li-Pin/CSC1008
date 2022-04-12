@@ -54,13 +54,14 @@ def driverLogin_post():
     session['driverAvailable'] = driver.isAvailable
     available = session['driverAvailable']
     session['driverID'] = driver.id
+    session['driverUsername'] = username
     if available == 'TRUE': # if driver isavailable
         return redirect(url_for('auth.driverHome')) # redirect to location of curr driver
     if available == 'FALSE':
         return redirect(url_for('auth.driverHome'))
     session['driverPath'] = driver.journeyRoute
     print(driver.journeyRoute)
-    session['driverUsername'] = username
+    
     if not driver or not driver.password:
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.driverLogin'))
@@ -94,10 +95,10 @@ def driverHome():
         isAvailable = request.form.get('isAvailable')
         driverloc = request.form.get('startLoc')
 
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+        drivertble.query.filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+        drivertble.query.filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
         db.session.commit()
-
+        
         return redirect(url_for('auth.driverLocation',startLoc=driverloc))
 
     return render_template("driverHome.html")
