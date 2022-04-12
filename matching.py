@@ -36,7 +36,7 @@ class NewBooking:
             for v in graph.edgeGraph[u]:
                 if not visited[v[0]]:
                     if v[0] in graph.driverLocation and v[1] < self.max:  # v[0] = current search location
-                        if(len(graph.driverLocation[self.customerLocation]) > 0):
+                        if(len(graph.driverLocation[v[0]]) > 0):
                             driverID = graph.driverLocation[v[0]].pop(0)  # this will pop driverID then find details from driverID array
                             driverisat = v[0]
                             self.driverName = graph.drivers[driverID][0]

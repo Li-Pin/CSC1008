@@ -14,7 +14,6 @@ from matching import NewBooking
 
 auth = Blueprint('auth', __name__)
 
-customerPath = []
 # Route to login page
 @auth.route('/')
 def login():
@@ -51,7 +50,8 @@ def driverLogin_post():
     driver = drivertble.query.filter_by(username=username).first()
     session['driverID'] = driver.id
     session['driverUsername'] = username
-
+    ridePath = session['ridePath']
+    print('driver stuff', ridePath)
     # check if driver exists
     # if driver don't exist, prompt driver to try again
     if not driver or not driver.password:
@@ -80,6 +80,10 @@ def driverLogin_post():
 @login_required
 def driverHome():
     driverUsername = session['driverUsername']
+    ridePath = session['ridePath']
+    print('ride path is', ridePath)
+    print(type(ridePath))
+    print(ridePath[0])
     if request.method == 'POST':
         isAvailable = request.form.get('isAvailable')
         driverloc = request.form.get('startLoc')
@@ -91,6 +95,35 @@ def driverHome():
         return redirect(url_for('auth.driverLocation'))
 
     return render_template("driverHome.html")
+
+
+
+@auth.route('/driverRoute', methods=['GET', 'POST'])
+@login_required
+def driverRoute():
+    ridePath = session['ridePath']
+    print('ride path is', ridePath)
+    print(type(ridePath))
+    print(ridePath[0])
+    m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+    plugins.AntPath(
+        locations=ridePath
+    ).add_to(m)
+    folium.Marker(
+        location=ridePath[0],
+        icon=folium.Icon(color="green", icon="map-marker"), tooltip="Your Driver's Location"
+    ).add_to(m)
+    folium.Marker(
+        location=ridePath[-1],
+        icon=folium.Icon(color="blue", icon="map-marker"), tooltip="Your Location"
+    ).add_to(m)
+    m.fit_bounds([ridePath[0], ridePath[-1]])
+
+    return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Driver is on the way')
+    return render_template("driverRoute.html")
+
+
+
 
 
 # Route to driver location
@@ -254,8 +287,8 @@ def rideDetails():
     end = session['customerEnd']
     booking = NewBooking(int(start), float(maxDist), customerName)
     driverStart, driverID, driverName = booking.finddriver()
-    if driverStart != 'No driver':
-        driverInfo = 'Your Driver is: ' + driverName
+    if driverStart != 'No driver': # if there is a driver
+        driverInfo = 'Your Driver is: ' + driverName  # setting driver name
         if int(driverStart) != int(start):
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
             newDriver = Driver(driverName, driverStart)
@@ -267,8 +300,8 @@ def rideDetails():
             startLocation = (graph.locations[int(start)][0])
             endLocation = (graph.locations[int(end)][0])
             driverLocation = (graph.locations[driverStart][0])
+            session['ridePath']=path # this is driver path
             m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-
             plugins.AntPath(
                 locations=path
             ).add_to(m)
@@ -283,7 +316,7 @@ def rideDetails():
                 popup = endLocation, tooltip = "Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
-        else:
+        else:  # driver at current location
             path = []
             path.append([graph.locations[int(start)][1], graph.locations[int(start)][2]])
             m = folium.Map(location=path[0], tiles='OpenStreetMap', zoom_start=18, control_scale=True)
@@ -299,8 +332,7 @@ def rideDetails():
                                    driverStatus='Driver has arrived!')
         return render_template("rideDetails.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation,rideCost=rideCost, driverInfo=driverInfo, driverStatus='Driver is on the way')
-    else:
-
+    else: # no driver available
         return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
 
