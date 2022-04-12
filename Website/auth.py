@@ -55,19 +55,12 @@ def driverLogin_post():
     available = session['driverAvailable']
     session['driverID'] = driver.id
     if available == 'TRUE': # if driver isavailable
+        return redirect(url_for('auth.driverHome')) # redirect to location of curr driver
+    if available == 'FALSE':
         return redirect(url_for('auth.driverHome'))
     session['driverPath'] = driver.journeyRoute
     print(driver.journeyRoute)
     session['driverUsername'] = username
-
-    # start = driverPath[0]
-    # end = driverPath[-1]
-    # startLocation = (graph.locations[int(start)][0])
-    # endLocation = (graph.locations[int(end)][0])
-    # driverLocation = (graph.locations[driverStart][0])
-
-    # check if driver exists
-    # if driver don't exist, prompt driver to try again
     if not driver or not driver.password:
         flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.driverLogin'))
