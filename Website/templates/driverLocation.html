@@ -5,9 +5,9 @@
         <h1></h1>
     </div>
     <form id=centerRide method="POST">
-        <label >Location: {{ startLoc }}</label><br>
-        <label >Driver name: {{ driverUsername }}</label>
-
+        <label >Hi {{ driverUsername }}, you are online!</label>
+        <p>your location is {{startLocation}}</p>
+        {{map|safe}}
     </form>
 
 
