@@ -2,7 +2,7 @@
 
 {% block content %}
     <div id="welcome" align="center">
-        <h1>Welcome!</h1>
+        <h1>Welcome, {{ username }}!</h1>
     </div>
     <div class="row">
     <div class="col-sm-12" style="margin-bottom: 10px;">
@@ -10,15 +10,7 @@
             <a href="/bookride" id="bookride" class="btn btn-outline-info">Book Ride</a>
         </div>
         <div class="">
-            <a href="/booksharedride" id="booksharedride" class="btn btn-outline-info">Book Shared Ride</a>
-        </div>
-    </div>
-    <div class="col-sm-12">
-        <div class="pull-left">
-            <a href="/myrides" id="myrides" class="btn btn-outline-info">My Rides</a>
-        </div>
-        <div class="">
-            <a href="/settings" id="settings" class="btn btn-outline-info">Settings</a>
+            <a href="/" id="logout" class="btn btn-outline-info">Log Out</a>
         </div>
     </div>
     </div>

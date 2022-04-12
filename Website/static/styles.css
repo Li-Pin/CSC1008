@@ -10,18 +10,23 @@
 
 #centerLogin, #centerDriver{
     position: absolute;
-    top: 70%;
+    top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-#btnSect{
-    margin-bottom: 5%;
-}
+#centerRegister{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+ }
 
 #centerRide{
     margin-top: 2%;
+    margin-bottom: 3%;
 }
+
 
 #centerDriverHome{
     position: absolute;
@@ -35,6 +40,11 @@
     top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#driverLogout{
+    margin-top: 65%;
+    margin-right: 35%;
 }
 
 #emailError{
@@ -54,7 +64,7 @@
     margin-left: 355px;
 }
 
-#welcome, #settingstitle{
+#welcome{
     margin-top: 20px;
 }
 
@@ -63,7 +73,6 @@
     align-items: center;
     justify-content: center;
     padding-top: 100px;
-
 }
 
 #bookride, #editprofile{
@@ -92,29 +101,10 @@
     color: grey;
 }
 
-#booksharedride, #savedlocations{
+#logout{
     width: 220px;
     height: 120px;
     padding-top: 40px;
-    text-align: center;
-    font-size: 1.5em;
-}
-
-#myrides, #sendfeedback{
-    width: 220px;
-    height: 120px;
-    margin-right: 10px;
-    margin-top: -90px;
-    padding-top: 40px;
-    text-align: center;
-    font-size: 1.5em;
-}
-
-#settings, #helpcentre{
-    width: 220px;
-    height: 120px;
-    padding-top: 40px;
-    margin-top: -90px;
     text-align: center;
     font-size: 1.5em;
 }
@@ -124,8 +114,6 @@
     padding: 2%;
     border-radius: 5px;
 }
-
-
 
 #mapdiv{
     margin-top: 40px;
@@ -152,4 +140,7 @@
     transform: translate(-70%, -10%);
 }
 
+#homeButton{
+    margin-top: 1%;
+}
 

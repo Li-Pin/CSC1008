@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
 import graphADT
 from . import db
-from .models import User, TEST_ride2, TEST_shared, drivertble
+from .models import User, drivertble
 from oneMapMethods import locationdet
 import customer
 from driver import Driver
@@ -110,10 +110,12 @@ def driverHome():
     return render_template("driverHome.html")
 
 
-
 @auth.route('/driverRoute', methods=['GET', 'POST'])
 @login_required
 def driverRoute():
+    if request.method == 'POST':
+        return redirect(url_for("auth.driverLogin"))
+
     driverPath = session['driverPath']
     print(driverPath)
     driverPath=driverPath.replace('[', '')
@@ -154,10 +156,6 @@ def driverRoute():
     return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Driver is on the way')
 
 
-
-
-
-
 # Route to driver location
 @auth.route('/driverLocation', methods=['GET', 'POST'])
 @login_required
@@ -187,10 +185,10 @@ def register():
             flash('Email address already exist, please use another email.', 'danger')
             return redirect(url_for('auth.register'))
 
-        new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email)
+        new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email, onRide="", journeyRoute="")
         db.session.add(new_user)
         db.session.commit()
-        login_user(user, remember=True)
+        # login_user(user, remember=True)
         flash('Registration Success!', 'success')
         return redirect(url_for("auth.login"))
 
@@ -201,7 +199,8 @@ def register():
 @auth.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
-    return render_template("home.html")
+    username = session['customerName']
+    return render_template("home.html", username=username)
 
 
 # Route to book ride page
@@ -209,46 +208,13 @@ def home():
 @login_required
 def bookride():
     if request.method == 'POST':
-        start = request.form.get('pickUp')  # to replace with form.get.(=start)
-        end = request.form.get('dropOff')  # to replace with form.get.(=end)
+        start = request.form.get('pickUp')
+        end = request.form.get('dropOff')
         maxDist = request.form.get('searchRange')
 
         return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end,maxDist=maxDist))
 
     return render_template("bookride.html")
-
-
-# Route to book shared ride page
-@auth.route('/booksharedride', methods=['GET', 'POST'])
-@login_required
-def booksharedride():
-    if request.method == 'POST':
-        pickUp = request.form.get('pickUp')  # Taking input from form
-        dropOff = request.form.get('dropOff')
-        time = request.form.get('time')
-        pax = request.form.get('pax')
-        carType = request.form.get('carType')
-        date = request.form.get('date')
-        paym = request.form.get('paym')
-
-        fromLocation = locationdet(pickUp)  # Passing to API
-        toLocation = locationdet(dropOff)
-        fromLocationlat = fromLocation[0]  # Assigning array values
-        fromLocationlong = fromLocation[1]
-        toLocationlat = toLocation[0]
-        toLocationlong = toLocation[1]
-        fromLocationname = fromLocation[2]
-        toLocationname = toLocation[2]
-
-        Share_Ride = TEST_shared(pickUp=pickUp, carType=carType, dropOff=dropOff, pax=pax, date=date, time=time,
-                                 paym=paym)
-        db.session.add(Share_Ride)
-        db.session.commit()
-        return redirect(url_for('auth.confirmride', fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                                toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                                fromLocationname=fromLocationname, toLocationname=toLocationname))
-        return redirect(url_for("auth.confirmride"))
-    return render_template("booksharedride.html")
 
 
 @auth.route('/confirmride', methods=['GET', 'POST'])
@@ -311,9 +277,13 @@ def confirmride():
     return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
     endLocation=endLocation, rideCost=rideCost)
 
+
 @auth.route('/rideDetails', methods=['GET','POST'])
 @login_required
 def rideDetails():
+    if request.method == 'POST':
+        return redirect(url_for("auth.home"))
+
     startLocation = request.args.get('startLocation', None)
     endLocation = request.args.get('endLocation', None)
     customerDistance = request.args.get('customerDistance', None)
@@ -393,24 +363,3 @@ def rideDetails():
         return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
 
-
-
-@auth.route('/confirmsharedride', methods=['GET', 'POST'])
-@login_required
-def confirmsharedride():
-    fromLocationlat = request.args.get('fromLocationlat', None)
-    fromLocationlong = request.args.get('fromLocationlong', None)
-    toLocationlat = request.args.get('toLocationlat', None)
-    toLocationlong = request.args.get('toLocationlong', None)
-    fromLocationname = request.args.get('fromLocationname', None)
-    toLocationname = request.args.get('toLocationname', None)
-
-    return render_template("confirmsharedride.html", fromLocationlat=fromLocationlat, fromLocationlong=fromLocationlong,
-                           toLocationlat=toLocationlat, toLocationlong=toLocationlong,
-                           fromLocationname=fromLocationname, toLocationname=toLocationname)
-
-
-@auth.route('/settings')
-@login_required
-def settings():
-    return render_template("settings.html")
