@@ -16,3 +16,8 @@ __pycache__/queueADT.cpython-39.pyc
 *.db
 .venv
 __pycache__/matching.cpython-39.pyc
+*.pyc
+*.pyc
+Website/__pycache__/__init__.cpython-310.pyc
+__pycache__/oneMapMethods.cpython-310.pyc
+Website/__pycache__/models.cpython-310.pyc
