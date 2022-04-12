@@ -203,15 +203,13 @@ def confirmride():
     for i in customerPath:
         if i in graph.locations:
             path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-            print(path)
-    print(graph.locations[int(start)][0])
+
     startLocation = (graph.locations[int(start)][0])
     endLocation = (graph.locations[int(end)][0])
-    print('your is distance is: %0.2f', customerDistance)
-    print('price will be :', baseFare + customerDistance * perKMPrice)
-    print('Your Route is :', customerPath)
-    print('Your starting location is :', customerPath[0])
 
+    rideCost = baseFare + customerDistance * perKMPrice
+    rideCost = round(rideCost, 2)
+    customerDistance = round(customerDistance, 2)
     m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
         # folium.PolyLine(
         #     locations=path
@@ -221,72 +219,91 @@ def confirmride():
         locations=path
     ).add_to(m)
     folium.Marker(
-        location=path[0]
+        location=path[0],
+        icon=folium.Icon(color="blue", icon="map-marker"),
+        popup=startLocation, tooltip="Your Location"
     ).add_to(m)
     folium.Marker(
-        location=path[-1]
+        location=path[-1],
+        icon=folium.Icon(color="red", icon="map-marker"),
+        popup=endLocation, tooltip="Your Destination"
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
+
     if request.method == 'POST':
-        return redirect(url_for("auth.rideDetails"))
+        return redirect(url_for('auth.rideDetails',customerDistance=customerDistance, startLocation=startLocation,
+    endLocation=endLocation, maxDist=maxDist, rideCost=rideCost))
 
     return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
-    endLocation=endLocation)
+    endLocation=endLocation, rideCost=rideCost)
 
-
-
-    return render_template("confirmride.html",customerDistance=customerDistance, startLocation=startLocation, endLocation=endLocation)
 @auth.route('/rideDetails', methods=['GET','POST'])
 @login_required
 
 def rideDetails():
+    startLocation = request.args.get('startLocation', None)
+    endLocation = request.args.get('endLocation', None)
+    customerDistance = request.args.get('customerDistance', None)
+    maxDist = request.args.get('maxDist', None)
+    rideCost = request.args.get('rideCost', None)
+    if maxDist =="noPref":
+        maxDist=99999999
     graph = graphADT.g
     customerName = session['customerName']
     start = session['customerStart']
     end = session['customerEnd']
-    maxDist = 1000
-    booking = NewBooking(int(start), int(maxDist), customerName)
+    booking = NewBooking(int(start), float(maxDist), customerName)
     driverStart, driverID, driverName = booking.finddriver()
-    if int(driverStart) != int(start):
-        if driverStart != 'No driver':
-            print('Driver is at', int(driverStart))
+    if driverStart != 'No driver':
+        driverInfo = 'Your Driver is: ' + driverName
+        if int(driverStart) != int(start):
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
-            print('your driver is :', driverName)
-            # End of Customer stuff
             newDriver = Driver(driverName, driverStart)
             driverPath, driverDistance = newDriver.driverRoute(driverStart, int(start))
-            print('your driver is ', driverDistance, 'KM away')
-            print('your drivers route is', driverPath)
             path = []
             for i in driverPath:
                 if i in graph.locations:
                     path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-                    print(path)
-            print(graph.locations[int(start)][0])
             startLocation = (graph.locations[int(start)][0])
             endLocation = (graph.locations[int(end)][0])
+            driverLocation = (graph.locations[driverStart][0])
             m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-            # folium.PolyLine(
-            #     locations=path
-            # ).add_to(m)
 
             plugins.AntPath(
                 locations=path
             ).add_to(m)
             folium.Marker(
-                location=path[0]
+                location=path[0],
+                icon = folium.Icon(color="green", icon="map-marker"),
+                popup=driverLocation, tooltip="Your Driver's Location"
             ).add_to(m)
             folium.Marker(
-                location=path[-1]
+                location=path[-1],
+                icon = folium.Icon(color="blue", icon="map-marker"),
+                popup = endLocation, tooltip = "Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
         else:
-            print('No driver is available!')
-        return render_template("rideDetails.html", map=m._repr_html_())
+            path = []
+            path.append([graph.locations[int(start)][1], graph.locations[int(start)][2]])
+            m = folium.Map(location=path[0], tiles='OpenStreetMap', zoom_start=18, control_scale=True)
+            folium.Marker(
+                location=path[0],
+                icon = folium.Icon(color="green", icon="map-marker"),
+                popup=startLocation, tooltip="Your Location"
+            ).add_to(m)
+
+            return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
+                                   startLocation=startLocation,
+                                   endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
+                                   driverStatus='Driver has arrived!')
+        return render_template("rideDetails.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
+                                endLocation=endLocation,rideCost=rideCost, driverInfo=driverInfo, driverStatus='Driver is on the way')
     else:
-        return render_template("rideisHere.html")
-#,customerDistance=customerDistance, startLocation=startLocation,
-  # endLocation=endLocation
+
+        return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
+                                endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
+
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 @login_required
 def confirmsharedride():

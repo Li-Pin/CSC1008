@@ -15,7 +15,8 @@
           <h3>Ride Info</h3>
           <p>Ride is from: {{startLocation}} </p>
           <p>Ride is to: {{endLocation}} </p>
-          <p>Distance is: {{customerDistance}} </p>
+          <p>Distance is: {{customerDistance}} KM </p>
+          <p>Ride Cost is: ${{rideCost}}</p>
                     {{ map | safe }}
             <div id='mapdiv' style='height:800px;'></div>
     <form id=centerRide method="POST">

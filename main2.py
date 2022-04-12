@@ -18,7 +18,7 @@ customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get 
 path = []
 for i in customerPath:
     if i in g2.locations:
-        path.append([g2.locations[int(i)][1],g2.locations[int(i)][2]])
+        path.append([g2.locations[int(i)][1], g2.locations[int(i)][2]])
         print(path)
 # array = [int(x) for x in path.split(',')]
 # print(array)
