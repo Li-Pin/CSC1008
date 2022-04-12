@@ -10,6 +10,7 @@ import customer
 from driver import Driver
 import folium
 from folium import plugins
+from matching import NewBooking
 
 auth = Blueprint('auth', __name__)
 
@@ -225,28 +226,64 @@ def confirmride():
         location=path[-1]
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
+    if request.method == 'POST':
+        return redirect(url_for("auth.rideDetails"), startPoint=start,endPoint=end,maxDist=maxDist)
 
     return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
     endLocation=endLocation)
 
 
-    # booking = NewBooking(int(start), int(maxDist), newCustomer.name)
-    # driverStart, driverID, driverName = booking.finddriver()
-    #
-    # if driverStart != 'No driver':
-    #     print('Driver is at', int(driverStart))
-    #     # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
-    #     print('your driver is :', driverName)
-    #     # End of Customer stuff
-    #     # newDriver = Driver(driverName, driverStart)
-    #     # driverPath, driverDistance = newDriver.driverRoute(start)
-    #     # print('your driver is ', driverDistance, 'KM away')
-    #     # print('your drivers route is', driverPath)
-    # else:
-    #     print('No driver is available!')
 
     return render_template("confirmride.html",customerDistance=customerDistance, startLocation=startLocation, endLocation=endLocation)
+@auth.route('/rideDetails', methods=['GET','POST'])
+@login_required
 
+def rideDetails():
+    graph = graphADT.g
+    customerName = session['customerName']
+    start = request.args.get('startPoint', None)
+    end = request.args.get('endPoint', None)
+    maxDist = request.args.get('maxDist', None)
+    booking = NewBooking(int(start), int(maxDist), customerName)
+    driverStart, driverID, driverName = booking.finddriver()
+    if driverStart != 'No driver':
+        print('Driver is at', int(driverStart))
+        # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
+        print('your driver is :', driverName)
+        # End of Customer stuff
+        newDriver = Driver(driverName, driverStart)
+        driverPath, driverDistance = newDriver.driverRoute(start)
+        print('your driver is ', driverDistance, 'KM away')
+        print('your drivers route is', driverPath)
+        path = []
+        for i in driverPath:
+            if i in graph.locations:
+                path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
+                print(path)
+        print(graph.locations[int(start)][0])
+        startLocation = (graph.locations[int(start)][0])
+        endLocation = (graph.locations[int(end)][0])
+        m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+        # folium.PolyLine(
+        #     locations=path
+        # ).add_to(m)
+
+        plugins.AntPath(
+            locations=path
+        ).add_to(m)
+        folium.Marker(
+            location=path[0]
+        ).add_to(m)
+        folium.Marker(
+            location=path[-1]
+        ).add_to(m)
+        m.fit_bounds([path[0], path[-1]])
+    else:
+        print('No driver is available!')
+    return render_template("rideDetails.html", map=m._repr_html_())
+
+#,customerDistance=customerDistance, startLocation=startLocation,
+  # endLocation=endLocation
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 @login_required
 def confirmsharedride():
