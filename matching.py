@@ -17,8 +17,7 @@ class NewBooking:
         driverisat = 'No driver'
         driverID = None
 
-        if self.customerLocation in graph.driverLocation:  # if driver is at current location
-            if(len(graph.driverLocation[self.customerLocation]) > 0):
+        if self.customerLocation in graph.driverLocation and len(graph.driverLocation[self.customerLocation]) > 0:  # if driver is at current location
                 driverID = graph.driverLocation[self.customerLocation].pop(0)  # pop first driver at current location
                 self.driverName = graph.drivers[driverID][0]
                 return self.customerLocation, driverID, self.driverName
@@ -34,9 +33,8 @@ class NewBooking:
             u = queue.dequeue()
             bfs_traversal_output.append(u)
             for v in graph.edgeGraph[u]:
-                if not visited[v[0]]:
-                    if v[0] in graph.driverLocation and v[1] < self.max:  # v[0] = current search location
-                        if(len(graph.driverLocation[v[0]]) > 0):
+                if not visited[v[0]]:       
+                    if v[0] in graph.driverLocation and v[1] < self.max and len(graph.driverLocation[v[0]]) > 0:  # v[0] = current search location
                             driverID = graph.driverLocation[v[0]].pop(0)  # this will pop driverID then find details from driverID array
                             driverisat = v[0]
                             self.driverName = graph.drivers[driverID][0]

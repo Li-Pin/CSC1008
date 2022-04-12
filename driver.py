@@ -15,14 +15,6 @@ class Driver:
         self.pathRoute = []
         self.pathDistance = 0
 
-    def startjob(self, start):  # start should be key of location
-        graph = g.driverLocation
-        if int(start) not in graph:
-            graph.update({int(start): [self.id]})
-            print(graph)
-        else:
-            graph[int(start)].append(self.id)
-
     def driverRoute(self, driverLoc, customerLoc):
         self.start = driverLoc
         self.end = customerLoc

@@ -1,5 +1,7 @@
 
+from pickle import TRUE
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
+from sqlalchemy import null, true
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
 import graphADT
@@ -103,7 +105,7 @@ def driverHome():
         db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
         db.session.commit()
 
-        return redirect(url_for('auth.driverLocation'))
+        return redirect(url_for('auth.driverLocation',startLoc=driverloc))
 
     return render_template("driverHome.html")
 
@@ -162,9 +164,10 @@ def driverRoute():
 def driverLocation():
     driverUsername = session['driverUsername']
     driverID = session['driverID']
-    startLoc = session['startLoc']
-    driver = Driver(driverUsername, driverID)
-    driver.startjob(startLoc)
+    startLoc = request.args.get('startLoc')
+
+    Driver(driverUsername, driverID)
+
     return render_template("driverLocation.html")
 
 
@@ -251,8 +254,16 @@ def booksharedride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
-
     graph = graphADT.g
+    getDriver = drivertble.query.all()
+    for driver in getDriver:
+        graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
+        if(driver.isAvailable.lower() == 'true'):
+            if int(driver.driverloc) not in graph.driverLocation:
+                graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
+            elif (int(driver.id) not in graph.driverLocation[int(driver.driverloc)]):
+                graph.driverLocation[int(driver.driverloc)].append(int(driver.id))
+
     baseFare = 4.05  # taken from comfortdelgo website
     perKMPrice = 0.7  # taken from comfortdelgo website
     newCustomer = customer.Customer(session.get('customerName', None))
@@ -302,7 +313,6 @@ def confirmride():
 
 @auth.route('/rideDetails', methods=['GET','POST'])
 @login_required
-
 def rideDetails():
     startLocation = request.args.get('startLocation', None)
     endLocation = request.args.get('endLocation', None)
@@ -318,10 +328,10 @@ def rideDetails():
     booking = NewBooking(int(start), float(maxDist), customerName)
     driverStart, driverID, driverName = booking.finddriver()
 
-    if driverStart != 'No driver': # if there is a driver
-        driverInfo = 'Your Driver is: ' + driverName  # setting driver name
+    if driverStart != 'No driver':
         customerPath = session['customerPath']
-        # driver = drivertble.query.filter_by(username=username).first()
+        driverInfo = 'Your Driver is: ' + driverName
+        drivertble.query.filter(drivertble.id == int(driverID)).update({'driverloc': int(end)})
         if int(driverStart) != int(start):
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
             newDriver = Driver(driverName, driverStart)
@@ -335,8 +345,9 @@ def rideDetails():
             startLocation = (graph.locations[int(start)][0])
             endLocation = (graph.locations[int(end)][0])
             driverLocation = (graph.locations[driverStart][0])
-            # session['ridePath']=path # this is driver path
+
             m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+
             plugins.AntPath(
                 locations=path
             ).add_to(m)
@@ -381,6 +392,8 @@ def rideDetails():
     else: # no driver available
         return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
+
+
 
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])
 @login_required
