@@ -92,9 +92,9 @@ def driverLogin_post():
 @login_required
 def driverHome():
     driverUsername = session['driverUsername']
-    ridePath = session['ridePath']
-    print('ride path is', ridePath)
-    print(ridePath[0])
+    # ridePath = session['ridePath']
+    # print('ride path is', ridePath)
+    # print(ridePath[0])
     if request.method == 'POST':
         isAvailable = request.form.get('isAvailable')
         driverloc = request.form.get('startLoc')
@@ -116,7 +116,7 @@ def driverRoute():
     print(driverPath)
     driverPath=driverPath.replace('[', '')
     driverPath=driverPath.replace(']', '')
-    # driverPath=driverPath.replace(' ', '')
+    driverPath=driverPath.replace(',', '')
     driverPath = driverPath.split(' ')
     print(driverPath)
     graph = graphADT.g
@@ -320,16 +320,14 @@ def rideDetails():
 
     if driverStart != 'No driver': # if there is a driver
         driverInfo = 'Your Driver is: ' + driverName  # setting driver name
+        customerPath = session['customerPath']
         # driver = drivertble.query.filter_by(username=username).first()
         if int(driverStart) != int(start):
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
             newDriver = Driver(driverName, driverStart)
             driverPath, driverDistance = newDriver.driverRoute(driverStart, int(start))
-
-            customerPath = session['customerPath']
             totalPath = np.concatenate((driverPath,customerPath))
-            print(totalPath)
-            print(type(totalPath))
+
             path = []
             for i in driverPath:
                 if i in graph.locations:
@@ -337,7 +335,7 @@ def rideDetails():
             startLocation = (graph.locations[int(start)][0])
             endLocation = (graph.locations[int(end)][0])
             driverLocation = (graph.locations[driverStart][0])
-            session['ridePath']=path # this is driver path
+            # session['ridePath']=path # this is driver path
             m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
             plugins.AntPath(
                 locations=path
@@ -365,7 +363,15 @@ def rideDetails():
                 icon = folium.Icon(color="green", icon="map-marker"),
                 popup=startLocation, tooltip="Your Location"
             ).add_to(m)
-
+            print(customerPath)
+            customerPath.insert(0,int(start))
+            print(customerPath)
+            totalPath = customerPath
+            print(totalPath)
+            # totalPath = np.concatenate((driverPath,customerPath))
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': False})
+            db.session.commit()
             return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
                                    startLocation=startLocation,
                                    endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
