@@ -1,13 +1,10 @@
 
-from pickle import TRUE
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
-from sqlalchemy import null, true
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
 from graphADT import g as graph
 from . import db
 from .models import User, drivertble
-from oneMapMethods import locationdet
 import customer
 from driver import Driver
 import folium
@@ -80,35 +77,49 @@ def driverLogin_post():
 @login_required
 def driverHome():
     driverUsername = session['driverUsername']
-    # ridePath = session['ridePath']
-    # print('ride path is', ridePath)
-    # print(ridePath[0])
+    m = folium.Map(location=[1.3541, 103.8198], width='100%', height=500, tiles='OpenStreetMap', zoom_start=12,
+                   control_scale=True)
+    locarr = []
+    for loc in graph.locations:
+        locarr.append([graph.locations[int(loc)][1], graph.locations[int(loc)][2]])
+    for i in range(0, len(locarr)):
+        locationName = (graph.locations[i][0])
+        folium.Marker(
+            location=locarr[i],
+            icon=folium.Icon(color="blue", icon="map-marker"), tooltip=locationName
+        ).add_to(m)
+    m.fit_bounds([locarr[0], locarr[-1]])
+
     if request.method == 'POST':
         isAvailable = request.form.get('isAvailable')
-        driverloc = request.form.get('startLoc')
+        if isAvailable =='TRUE':
+            driverloc = request.form.get('startLoc')
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+            db.session.commit()
+            return redirect(url_for('auth.driverLocation', startLoc=driverloc))
+        else:
+            driverloc =''
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+            db.session.commit()
+    return render_template("driverHome.html",map=m._repr_html_())
 
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
-        db.session.commit()
 
-        return redirect(url_for('auth.driverLocation',startLoc=driverloc))
 
-    return render_template("driverHome.html")
 
 
 @auth.route('/driverRoute', methods=['GET', 'POST'])
 @login_required
 def driverRoute():
-    # if request.method == 'POST':
-    #     return redirect(url_for("auth.driverLogin"))
-
+    if request.method == 'POST':
+        return redirect(url_for("auth.driverLogin"))
     driverPath = session['driverPath']
-    print(driverPath)
     driverPath=driverPath.replace('[', '')
     driverPath=driverPath.replace(']', '')
     driverPath=driverPath.replace(',', '')
+    driverPath=driverPath.replace('', '')
     driverPath = driverPath.split(' ')
-    print(driverPath)
 
     path = []
     for i in driverPath:
@@ -119,14 +130,19 @@ def driverRoute():
     for i in range(0,len(path)):
         if path[i] == path[i-1]:
             temp = path[i]
-
+    print(driverPath)
+    startindex = driverPath[1]
+    endindex = driverPath[-1]
+    startLocation = (graph.locations[int(startindex)][0])
+    endLocation = (graph.locations[int(endindex)][0])
+    print(startLocation)
     m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
     plugins.AntPath(
         locations=path
     ).add_to(m)
     folium.Marker(
         location=path[0],
-        icon=folium.Icon(color="green", icon="map-marker"), tooltip="Your Location"
+        icon=folium.Icon(color="green", icon="map-marker"), tooltip="Your Location", popup=startLocation
     ).add_to(m)
     folium.Marker(
         location=temp,
@@ -134,11 +150,12 @@ def driverRoute():
     ).add_to(m)
     folium.Marker(
         location=path[-1],
-        icon=folium.Icon(color="blue", icon="map-marker"), tooltip="Customer Destination"
+        icon=folium.Icon(color="blue", icon="map-marker"), tooltip="Customer Destination", popup=endLocation
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
 
-    return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Get to your customer')
+    return render_template("driverRoute.html", map=m._repr_html_(), driverStatus='Get to your customer',
+                           startLocation=startLocation, endLocation=endLocation)
 
 
 
@@ -162,7 +179,12 @@ def driverLocation():
         popup=startLocation, tooltip="Your Location"
     ).add_to(m)
     Driver(driverUsername, driverID)
-
+    if request.method == 'POST':
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': ''})
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'FALSE'})
+        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'journeyRoute': ''})
+        db.session.commit()
+        return redirect(url_for("auth.driverHome"))
     return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername, startLocation=startLocation)
 
 # Route to register page
@@ -203,14 +225,25 @@ def home():
 @auth.route('/bookride', methods=['GET', 'POST'])
 @login_required
 def bookride():
+    m = folium.Map(location=[1.3541, 103.8198], width='100%', height='100%', tiles='OpenStreetMap', zoom_start=12,
+                   control_scale=True)
+    locarr = []
+    for loc in graph.locations:
+        locarr.append([graph.locations[int(loc)][1], graph.locations[int(loc)][2]])
+    for i in range(0, len(locarr)):
+        locationName = (graph.locations[i][0])
+        folium.Marker(
+            location=locarr[i],
+            icon=folium.Icon(color="blue", icon="map-marker"), tooltip=locationName
+        ).add_to(m)
+    m.fit_bounds([locarr[0], locarr[-1]])
     if request.method == 'POST':
         start = request.form.get('pickUp')  # to replace with form.get.(=start)
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
         maxDist = request.form.get('searchRange')
 
         return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end,maxDist=maxDist))
-
-    return render_template("bookride.html")
+    return render_template("bookride.html",map=m._repr_html_())
 
 
 @auth.route('/confirmride', methods=['GET', 'POST'])
@@ -247,9 +280,6 @@ def confirmride():
     rideCost = round(rideCost, 2)
     customerDistance = round(customerDistance, 2)
     m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-        # folium.PolyLine(
-        #     locations=path
-        # ).add_to(m)
 
     plugins.AntPath(
         locations=path
@@ -303,7 +333,6 @@ def rideDetails():
             newDriver = Driver(driverName, driverStart)
             driverPath, driverDistance = newDriver.driverRoute(driverStart, int(start))
             totalPath = np.concatenate((driverPath,customerPath))
-
             path = []
             for i in driverPath:
                 if i in graph.locations:
@@ -328,7 +357,7 @@ def rideDetails():
                 popup = endLocation, tooltip = "Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)})
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
             db.session.commit()
         else:  # driver at current location
@@ -342,8 +371,7 @@ def rideDetails():
             ).add_to(m)
             customerPath.insert(0, int(start))
             totalPath = customerPath
-            # totalPath = np.concatenate((driverPath,customerPath))
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)}) # driverPath
+            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)})
             db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
             db.session.commit()
             return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
