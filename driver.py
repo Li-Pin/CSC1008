@@ -27,6 +27,5 @@ class Driver:
         self.start = driverLoc
         self.end = customerLoc
         C = dijkstra(g, str(self.start), self.end)
-        g.printSolution(C, g.parent, self.pathRoute)
         self.pathDistance = g.printSolution(C, g.parent, self.pathRoute)
         return self.pathRoute, self.pathDistance

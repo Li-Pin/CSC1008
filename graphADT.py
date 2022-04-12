@@ -94,7 +94,7 @@ class Graph:
     def printSolution(self, dist, parent, pathArray):
 
         src = 0
-        for i in range(1, len(dist)):
+        for i in range(0, len(dist)-1):
             if i == self.end:
                 self.printPath(parent, i, pathArray)
                 return dist[i]

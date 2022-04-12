@@ -197,7 +197,8 @@ def confirmride():
     end = request.args.get('endPoint', None)
     maxDist = request.args.get('maxDist', None)
     customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
-    
+    session['customerStart']=start
+    session['customerEnd']=end
     path = []
     for i in customerPath:
         if i in graph.locations:
@@ -227,7 +228,7 @@ def confirmride():
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
     if request.method == 'POST':
-        return redirect(url_for("auth.rideDetails"), startPoint=start,endPoint=end,maxDist=maxDist)
+        return redirect(url_for("auth.rideDetails"))
 
     return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
     endLocation=endLocation)
@@ -241,47 +242,49 @@ def confirmride():
 def rideDetails():
     graph = graphADT.g
     customerName = session['customerName']
-    start = request.args.get('startPoint', None)
-    end = request.args.get('endPoint', None)
-    maxDist = request.args.get('maxDist', None)
+    start = session['customerStart']
+    end = session['customerEnd']
+    maxDist = 1000
     booking = NewBooking(int(start), int(maxDist), customerName)
     driverStart, driverID, driverName = booking.finddriver()
-    if driverStart != 'No driver':
-        print('Driver is at', int(driverStart))
-        # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
-        print('your driver is :', driverName)
-        # End of Customer stuff
-        newDriver = Driver(driverName, driverStart)
-        driverPath, driverDistance = newDriver.driverRoute(start)
-        print('your driver is ', driverDistance, 'KM away')
-        print('your drivers route is', driverPath)
-        path = []
-        for i in driverPath:
-            if i in graph.locations:
-                path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-                print(path)
-        print(graph.locations[int(start)][0])
-        startLocation = (graph.locations[int(start)][0])
-        endLocation = (graph.locations[int(end)][0])
-        m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-        # folium.PolyLine(
-        #     locations=path
-        # ).add_to(m)
+    if int(driverStart) != int(start):
+        if driverStart != 'No driver':
+            print('Driver is at', int(driverStart))
+            # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
+            print('your driver is :', driverName)
+            # End of Customer stuff
+            newDriver = Driver(driverName, driverStart)
+            driverPath, driverDistance = newDriver.driverRoute(driverStart, int(start))
+            print('your driver is ', driverDistance, 'KM away')
+            print('your drivers route is', driverPath)
+            path = []
+            for i in driverPath:
+                if i in graph.locations:
+                    path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
+                    print(path)
+            print(graph.locations[int(start)][0])
+            startLocation = (graph.locations[int(start)][0])
+            endLocation = (graph.locations[int(end)][0])
+            m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
+            # folium.PolyLine(
+            #     locations=path
+            # ).add_to(m)
 
-        plugins.AntPath(
-            locations=path
-        ).add_to(m)
-        folium.Marker(
-            location=path[0]
-        ).add_to(m)
-        folium.Marker(
-            location=path[-1]
-        ).add_to(m)
-        m.fit_bounds([path[0], path[-1]])
+            plugins.AntPath(
+                locations=path
+            ).add_to(m)
+            folium.Marker(
+                location=path[0]
+            ).add_to(m)
+            folium.Marker(
+                location=path[-1]
+            ).add_to(m)
+            m.fit_bounds([path[0], path[-1]])
+        else:
+            print('No driver is available!')
+        return render_template("rideDetails.html", map=m._repr_html_())
     else:
-        print('No driver is available!')
-    return render_template("rideDetails.html", map=m._repr_html_())
-
+        return render_template("rideisHere.html")
 #,customerDistance=customerDistance, startLocation=startLocation,
   # endLocation=endLocation
 @auth.route('/confirmsharedride', methods=['GET', 'POST'])

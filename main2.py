@@ -37,10 +37,10 @@ if driverStart != 'No driver':
     # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
     print('your driver is :', driverName)
     # End of Customer stuff
-    # newDriver = Driver(driverName, driverStart)
-    # driverPath, driverDistance = newDriver.driverRoute(start)
-    # print('your driver is ', driverDistance, 'KM away')
-    # print('your drivers route is', driverPath)
+    newDriver = Driver(driverName, driverStart)
+    driverPath, driverDistance = newDriver.driverRoute(driverStart, start)
+    print('your driver is ', driverDistance, 'KM away')
+    print('your drivers route is', driverPath)
 else:
     print('No driver is available!')
 
@@ -52,7 +52,7 @@ else:
 
 # driver log in if not avail
 #     newDriver = Driver(driverName, driverStart)
-
+#
 # don't have to run this part if we can store driver nodes in webpage global array
 #     driverPath, driverDistance = newDriver.driverRoute(driverLoc, customerLoc) get from DB driverLoc, customerLoc
 #     print('your route is', driverPath, 'your customer is at', customerLoc, your distance is, driverDistance)
