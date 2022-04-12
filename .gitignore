@@ -14,3 +14,5 @@ __pycache__/queueClass.cpython-39.pyc
 __pycache__/graphADT.cpython-39.pyc
 __pycache__/queueADT.cpython-39.pyc
 *.db
+.venv
+__pycache__/matching.cpython-39.pyc
