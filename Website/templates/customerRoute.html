@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div align="center">
+        <h1>Pick Up Customer</h1>
+    </div>
+
+        <html>
+          <head>
+            <title>Your Ride</title>
+          </head>
+          <body>
+          <h3>Ride Info</h3>
+          <p>Driver is at: {{startLocation}}</p>
+          <p>Drop off is at: {{endLocation}}</p>
+          <p>{{driverStatus}}</p>
+                    {{ map | safe }}
+          <br><br/>
+          <form method="POST">
+            <button type="submit" id="driverLogout" class="btn btn-outline-info">Logout</button>
+          </form>
+          <br><br/>
+          </body>
+
+
+        </html>
+
+
+
+{% endblock %}
