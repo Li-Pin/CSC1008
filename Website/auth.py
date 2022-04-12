@@ -94,6 +94,7 @@ def driverHome():
         isAvailable = request.form.get('isAvailable')
         if isAvailable =='TRUE':
             driverloc = request.form.get('startLoc')
+            session['driverloc'] = driverloc
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
             db.session.commit()
