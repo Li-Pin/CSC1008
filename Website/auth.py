@@ -153,6 +153,7 @@ def driverHome():
         ).add_to(m)
     m.fit_bounds([locarr[0], locarr[-1]])
 
+
     if request.method == 'POST':
         if request.form['submit_button'] == 'submit':
             isAvailable = request.form.get('isAvailable')
@@ -304,6 +305,15 @@ def homebooked():
 @auth.route('/bookride', methods=['GET', 'POST'])
 @login_required
 def bookride():
+    getDriver = drivertble.query.all()
+    for driver in getDriver:
+        graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
+        if driver.isAvailable.lower() == 'true':
+            if int(driver.driverloc) not in graph.driverLocation:
+                graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
+            elif int(driver.id) not in graph.driverLocation[int(driver.driverloc)]:
+                graph.driverLocation[int(driver.driverloc)].append(int(driver.id))
+
     m = folium.Map(location=[1.3541, 103.8198], width='100%', height='100%', tiles='OpenStreetMap', zoom_start=12,
                    control_scale=True)
     locarr = []
@@ -316,6 +326,18 @@ def bookride():
             icon=folium.Icon(color="blue", icon="map-marker"), tooltip=locationName
         ).add_to(m)
     m.fit_bounds([locarr[0], locarr[-1]])
+
+    driverarr=[]
+    for drivers in graph.driverLocation:
+        driverarr.append([graph.locations[int(drivers)][1], graph.locations[int(drivers)][2]])
+    for i in range(0, len(driverarr)):
+        folium.Marker(
+            location=driverarr[i],
+            icon=folium.Icon(color="green", icon="map-marker"), tooltip="Driver here!"
+        ).add_to(m)
+        print('this is ran')
+    m.fit_bounds([locarr[0], locarr[-1]])
+
     if request.method == 'POST':
         start = request.form.get('pickUp')  # to replace with form.get.(=start)
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
@@ -327,15 +349,6 @@ def bookride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
-    getDriver = drivertble.query.all()
-    for driver in getDriver:
-        graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
-        if driver.isAvailable.lower() == 'true':
-            if int(driver.driverloc) not in graph.driverLocation:
-                graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
-            elif int(driver.id) not in graph.driverLocation[int(driver.driverloc)]:
-                graph.driverLocation[int(driver.driverloc)].append(int(driver.id))
-
     baseFare = 4.05  # taken from comfortdelgo website
     perKMPrice = 0.7  # taken from comfortdelgo website
     newCustomer = customer.Customer(session.get('customerName', None))
