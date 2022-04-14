@@ -35,13 +35,6 @@
     transform: translate(-50%, 50%);
 }
 
-#centerSharedRide {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 #driverLogout{
     margin-top: 2%;
     margin-left: 10%;
@@ -157,7 +150,7 @@
     font-size: 1.5em;
 }
 
-#pickUp, #dropOff, #carType, #pax, #paym, #searchRange, #startLoc, #isAvailable{
+#pickUp, #dropOff, #startLoc, #isAvailable{
     border-color: lightgrey;
     padding: 2%;
     border-radius: 5px;
