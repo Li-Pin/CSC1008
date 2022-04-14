@@ -60,6 +60,21 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 3. Run the main.py
 
 # Features
+### Account
+###### Passesnger 
+* Create, Login, Logout
+* Book a ride
+* Route/Location map
+
+###### Driver 
+* Login, Logout
+* Start/End shift
+* Allocate start location
+
+### Algo
+* BSF (Searching of available driver)
+* Dijkstra (Shortest path)
+* Merge Sort (Sort nearest neighbour of BFS)
 
 # Contributor
 * [Li Pin](https://github.com/Li-Pin)
