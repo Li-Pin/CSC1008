@@ -14,9 +14,11 @@
           <body>
           <h3>Ride Info</h3>
           <p>Drop off is at: {{endLocation}}</p>
-          <p>{{driverInfo}}</p>
-          <p>{{driverStatus}}</p>
-                    {{ map | safe }}
+          <div id="driverStatus">
+              <h5>Status:</h5>
+              <h6>{{driverStatus}}</h6>
+          </div>
+            {{ map | safe }}
           <br><br/>
           <form method="POST">
             <button type="submit" id="driverLogout" class="btn btn-outline-info">Logout</button>

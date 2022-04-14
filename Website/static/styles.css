@@ -43,8 +43,20 @@
 }
 
 #driverLogout{
-    margin-top: 40%;
-    margin-right: 5%;
+    margin-top: 1%;
+    margin-left: 47%;
+}
+
+#driverStatus{
+    background-color: #17A2B8;
+    color: white;
+    width: 200px;
+    text-align: center;
+    padding:2px;
+    border-radius: 5px;
+    margin-left: 82%;
+    margin-top: -7.5%;
+    margin-bottom: 2%;
 }
 
 #emailError{
@@ -86,7 +98,24 @@
 
 #rideButton{
     width: 15%;
-    margin-top: 25%;
+    margin-top: 20%;
+}
+
+#rideStatusBox{
+    background-color: #17A2B8;
+    color: white;
+    width: 200px;
+    text-align: center;
+    padding:2px;
+    border-radius: 5px;
+    margin-left: 82%;
+    margin-top: -10%;
+    margin-bottom: 2%;
+}
+
+#confirmRideButton{
+    width: 8%;
+    margin-top: 1%;
 }
 
 #container{
@@ -136,13 +165,6 @@
     margin-top: 7%;
     margin-left: 20%;
     margin-bottom: 5%;
-}
-
-#driverLogout{
-    position: absolute;
-    top: 5.5%;
-    right: 15%;
-    transform: translate(-70%, -10%);
 }
 
 #statusBox{

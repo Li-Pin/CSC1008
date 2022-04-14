@@ -17,8 +17,12 @@
           <p>Ride is to: {{endLocation}} </p>
           <p>Distance is: {{customerDistance}} KM</p>
           <p>Ride Cost is: ${{rideCost}}</p>
-          <p>{{driverInfo}}</p>
-          <p>{{driverStatus}}</p>
+
+          <div id="rideStatusBox">
+              <h5>Status:</h5>
+              <h6>{{driverStatus}}</h6>
+              <h6>{{driverInfo}}</h6>
+          </div>
                     {{ map | safe }}
 
           <form id=centerRide method="POST">
