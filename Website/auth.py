@@ -1,7 +1,7 @@
 
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, current_user, logout_user
 from graphADT import g as graph
 from . import db
 from .models import User, drivertble
@@ -18,11 +18,13 @@ auth = Blueprint('auth', __name__)
 # Route to login page
 @auth.route('/')
 def login():
+    session['databaseValue'] = 1
     return render_template('login.html')
 
 
 @auth.route('/', methods=['GET', 'POST'])
 def login_post():
+    session['databaseValue'] = 1
     username = request.form.get('username')
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
@@ -49,6 +51,7 @@ def customerRoute():
     session['userPath'] = user.journeyRoute
     if request.method == 'POST':
         if request.form['submit_button'] == 'logout':
+            logout_user()
             return redirect(url_for("auth.login"))
         elif request.form['submit_button'] == 'completeTrip':
             username = session['customerName']
@@ -101,11 +104,13 @@ def customerRoute():
 # Route to driver page
 @auth.route('/driver')
 def driverLogin():
+    session['databaseValue'] = 2
     return render_template("driver.html")
 
 
 @auth.route('/driver', methods=['GET', 'POST'])
 def driverLogin_post():
+    session['databaseValue'] = 2
     if request.method == 'POST':
         if request.form['submit_button'] == 'login':
             username = request.form.get('username')
@@ -115,25 +120,24 @@ def driverLogin_post():
                 flash('Please check your login details and try again.', 'danger')
                 return redirect(url_for('auth.driverLogin'))
             # if driver exists, log driver in
-            login_user(driver, remember=True)
-            session['driverAvailable'] = driver.isAvailable  # setting driver availability
-            available = session['driverAvailable']
-            # setting session variables
-            session['driverUsername'] = username
-            session['driverID'] = driver.id
-
-            if available == 'TRUE':  # if driver working but not on job
-                session['driverloc'] = driver.driverloc
-                return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
-
-            elif available == 'DRIVING':  # if driver not working
-                session['driverPath'] = driver.journeyRoute
-                return redirect(url_for('auth.driverRoute'))
             else:
-                return redirect(url_for('auth.driverHome'))
+                login_user(driver, remember=True)
+                session['driverAvailable'] = driver.isAvailable  # setting driver availability
+                available = session['driverAvailable']
+                # setting session variables
+                session['driverUsername'] = username
+                session['driverID'] = driver.id
+                if available == 'TRUE':  # if driver working but not on job
+                    session['driverloc'] = driver.driverloc
+                    return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
+
+                elif available == 'DRIVING':  # if driver not working
+                    session['driverPath'] = driver.journeyRoute
+                    return redirect(url_for('auth.driverRoute'))
+                else:
+                    return redirect(url_for('auth.driverHome'))
         elif request.form['submit_button'] == 'back':
             return redirect(url_for('auth.login'))
-
 
 # Route to driver homepage
 @auth.route('/driverHome', methods=['GET', 'POST'])
@@ -173,6 +177,7 @@ def driverHome():
                     {'isAvailable': isAvailable})
                 db.session.commit()
         elif request.form['submit_button'] == 'logout':
+            logout_user()
             return redirect(url_for('auth.driverLogin'))
 
     return render_template("driverHome.html", map=m._repr_html_())
@@ -184,6 +189,7 @@ def driverRoute():
     driverUsername = session['driverUsername']
     if request.method == 'POST':
         if request.form['submit_button'] == 'logout':
+            logout_user()
             return redirect(url_for("auth.driverLogin"))
         elif request.form['submit_button'] == 'completeTrip':
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'TRUE'})

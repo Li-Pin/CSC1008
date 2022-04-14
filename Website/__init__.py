@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
@@ -20,12 +20,17 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User
+    from .models import User, drivertble
     create_database(app)
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        value = session['databaseValue']
+        if value == 1:
+            return User.query.get(int(user_id))
+        elif value == 2:
+            return drivertble.query.get(int(user_id))
+
 
     from .auth import auth
     app.register_blueprint(auth, url_prefix='/')
