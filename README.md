@@ -81,8 +81,8 @@ Design and implement an on-demand ride hailing application to allow user to requ
 * Merge Sort (Sort nearest neighbour of BFS)
 
 # Contributors
-* [Li Pin](https://github.com/Li-Pin)
+* [Low Li Pin](https://github.com/Li-Pin)
 * [Perpetua](https://github.com/pepperso07)
-* [Shermaine](https://github.com/shermainepeh)
-* [Kenny](https://github.com/Kenny-DevTech)
+* [Shermaine Peh](https://github.com/shermainepeh)
+* [Kenny Lim](https://github.com/Kenny-DevTech)
 * [Tan Yi](https://github.com/Excalyibur)
