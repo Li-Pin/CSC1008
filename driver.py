@@ -1,12 +1,10 @@
-import imp
 from sqlalchemy import null
 from flask import session as s
 from graphADT import g
-from djikstra import dijkstra
+from dijkstra import dijkstra
 
 
 class Driver:
-
     def __init__(self, name, id):
         self.name = name  # replace with forms.get.(driver name)
         self.id = id

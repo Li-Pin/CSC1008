@@ -1,5 +1,6 @@
 from queueADT import Queue
 
+
 def dijkstra(graph, startLoc, endLoc):
     graph.start = int(startLoc)
     graph.end = int(endLoc)
