@@ -476,7 +476,7 @@ def rideDetails():
                                 endLocation=endLocation,rideCost=rideCost, driverInfo=driverInfo, driverStatus='Driver is on the way')
     # no driver available
     else:
-        return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
+        return render_template("noRide.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
 
 #  Setting driver availability to 'DRIVING', upload customer journey path and setting onRide to true

@@ -190,6 +190,22 @@
     margin-bottom: 2%;
 }
 
+#noRide{
+    background-color: #d36a6a;
+    color: white;
+    width: 530px;
+    height: 300px;
+    text-align: center;
+    padding: 11% 2px 2px 2px;
+    border-radius: 5px;
+    margin: 5% auto 0;
+}
+
+#noRideHome{
+    margin-left: 47%;
+    margin-top: 2%;
+}
+
 #completeTrip{
     margin-left: 50%;
     margin-top: -16%;
