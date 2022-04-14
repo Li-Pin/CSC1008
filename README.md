@@ -8,7 +8,7 @@
 </div>
 
 # About The Project
-Design and implement an on-demnad ride hailing application to allow user to request for rides.
+Design and implement an on-demand ride hailing application to allow user to request for rides.
 
 # Built With
 
@@ -51,7 +51,7 @@ Design and implement an on-demnad ride hailing application to allow user to requ
     pip install folium
    ```
 ### Running the Project
-1. Clone the repo
+1. Clone the repository
    ```sh
    git clone https://github.com/Li-Pin/CSC1008.git
    ```
@@ -61,8 +61,8 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 
 # Features
 ### Account
-###### Passesnger 
-* Create, Login, Logout
+###### Passenger 
+* Create account, Login, Logout
 * Book a ride
 * Route/Location map
 
@@ -71,12 +71,12 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 * Start/End shift
 * Allocate start location
 
-### Algo
-* BSF (Searching of available driver)
+### Algorithms
+* Breadth First Search (Searching of available driver)
 * Dijkstra (Shortest path)
 * Merge Sort (Sort nearest neighbour of BFS)
 
-# Contributor
+# Contributors
 * [Li Pin](https://github.com/Li-Pin)
 * [Perpetua](https://github.com/pepperso07)
 * [Shermaine](https://github.com/shermainepeh)
