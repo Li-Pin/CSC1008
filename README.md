@@ -4,7 +4,7 @@
     <img src="https://github.com/Li-Pin/CSC1008/blob/main/Website/static/Images/pngegg.png" alt="Lift Ride Hailing" width="100" height="80">
   </a>
 
-  <h2 align="center">Lift Ride Hailing</h3>
+  <h1 align="center">Lift Ride Hailing</h1>
 </div>
 
 # About The Project
