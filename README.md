@@ -72,7 +72,8 @@ Design and implement an on-demand ride hailing application to allow user to requ
 ###### Driver 
 * Login, Logout
 * Start/End shift
-* Allocate start location
+* Allocate start shift location
+* Route/Location map
 
 ### Algorithms
 * Breadth First Search (Searching of available driver)
