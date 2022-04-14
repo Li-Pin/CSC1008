@@ -5,10 +5,11 @@
         <h1></h1>
     </div>
     <form id=centerRide method="POST">
-        <label >Hi {{ driverUsername }}, you are online!</label>
-        <p>your location is {{startLocation}}</p>
+        <h2>Hi {{ driverUsername }}, you are online!</h2>
+        <br>
+        <p>Your location is {{startLocation}}</p>
         {{map|safe}}
-        <button type="submit" id="driverButton" class="btn btn-outline-info">End Shift</button>
+        <button type="submit" id="driverLocationBtn" class="btn btn-outline-info">End Shift</button>
     </form>
 
 

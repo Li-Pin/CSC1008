@@ -30,7 +30,7 @@
 
 #centerDriverHome{
     position: absolute;
-    top: 60%;
+    top: 70%;
     left: 52%;
     transform: translate(-50%, 50%);
 }
@@ -43,8 +43,8 @@
 }
 
 #driverLogout{
-    margin-top: 65%;
-    margin-right: 35%;
+    margin-top: 40%;
+    margin-right: 5%;
 }
 
 #emailError{
@@ -129,15 +129,34 @@
 
 #driverButton{
     margin-top: 7%;
-    margin-left: 40%;
+    margin-left: 20%;
     margin-bottom: 5%;
 }
 
 #driverLogout{
     position: absolute;
     top: 5.5%;
-    right: 10%;
+    right: 15%;
     transform: translate(-70%, -10%);
+}
+
+#statusBox{
+    background-color: red;
+    width: 200px;
+}
+
+#customerLogout{
+    margin-left: 46%;
+    margin-bottom: 5%;
+}
+
+#driverLocationBtn{
+    margin-top: 7%;
+    margin-left: 45%;
+}
+
+#driverBack{
+    margin-left: 10%;
 }
 
 #homeButton{

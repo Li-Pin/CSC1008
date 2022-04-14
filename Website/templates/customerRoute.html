@@ -2,7 +2,7 @@
 
 {% block content %}
     <div align="center">
-        <h1>Pick Up Customer</h1>
+        <h1>Current Booking</h1>
     </div>
 
         <html>
@@ -13,11 +13,14 @@
           <h3>Ride Info</h3>
           <p>Driver is at: {{startLocation}}</p>
           <p>Drop off is at: {{endLocation}}</p>
-          <p>{{driverStatus}}</p>
-                    {{ map | safe }}
+          <div id="statusBox">
+              <h5>{{driverStatus}}</h5>
+          </div>
+
+            {{ map | safe }}
           <br><br/>
           <form method="POST">
-            <button type="submit" id="driverLogout" class="btn btn-outline-info">Logout</button>
+            <button type="submit" id="customerLogout" class="btn btn-outline-info">Logout</button>
           </form>
           <br><br/>
           </body>

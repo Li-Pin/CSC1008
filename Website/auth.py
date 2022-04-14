@@ -95,34 +95,35 @@ def driverLogin():
     return render_template("driver.html")
 
 
-
 @auth.route('/driver', methods=['GET', 'POST'])
 def driverLogin_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    driver = drivertble.query.filter_by(username=username).first()  # getting driver details
-    if not driver or not driver.password:
-        flash('Please check your login details and try again.', 'danger')
-        return redirect(url_for('auth.driverLogin'))
-    # if driver exists, log driver in
-    login_user(driver, remember=True)
-    session['driverAvailable'] = driver.isAvailable   # setting driver availability
-    available = session['driverAvailable']
-    # setting session variables
-    session['driverUsername'] = username
-    session['driverID'] = driver.id
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'login':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            driver = drivertble.query.filter_by(username=username).first()  # getting driver details
+            if not driver or not driver.password:
+                flash('Please check your login details and try again.', 'danger')
+                return redirect(url_for('auth.driverLogin'))
+            # if driver exists, log driver in
+            login_user(driver, remember=True)
+            session['driverAvailable'] = driver.isAvailable   # setting driver availability
+            available = session['driverAvailable']
+            # setting session variables
+            session['driverUsername'] = username
+            session['driverID'] = driver.id
 
-    if available == 'TRUE':  # if driver working but not on job
-        session['driverloc']=driver.driverloc
-        return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
+            if available == 'TRUE':  # if driver working but not on job
+                session['driverloc']=driver.driverloc
+                return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
 
-    elif available == 'DRIVING':  # if driver not working
-        session['driverPath'] = driver.journeyRoute
-        return redirect(url_for('auth.driverRoute'))
-    else:
-        return redirect(url_for('auth.driverHome'))
-
-
+            elif available == 'DRIVING':  # if driver not working
+                session['driverPath'] = driver.journeyRoute
+                return redirect(url_for('auth.driverRoute'))
+            else:
+                return redirect(url_for('auth.driverHome'))
+        elif request.form['submit_button'] == 'back':
+            return redirect(url_for('auth.login'))
 
 
 # Route to driver homepage
@@ -144,23 +145,24 @@ def driverHome():
     m.fit_bounds([locarr[0], locarr[-1]])
 
     if request.method == 'POST':
-        isAvailable = request.form.get('isAvailable')
-        if isAvailable =='TRUE':
-            driverloc = request.form.get('startLoc')
-            session['driverloc'] = driverloc
-            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
-            db.session.commit()
-            return redirect(url_for('auth.driverLocation', startLoc=driverloc))
-        else:
-            driverloc =''
-            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
-            db.session.commit()
+        if request.form['submit_button'] == 'submit':
+            isAvailable = request.form.get('isAvailable')
+            if isAvailable =='TRUE':
+                driverloc = request.form.get('startLoc')
+                session['driverloc'] = driverloc
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+                db.session.commit()
+                return redirect(url_for('auth.driverLocation', startLoc=driverloc))
+            else:
+                driverloc =''
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+                db.session.commit()
+        elif request.form['submit_button'] == 'logout':
+            return redirect(url_for('auth.driverLogin'))
+
     return render_template("driverHome.html",map=m._repr_html_())
-
-
-
 
 
 @auth.route('/driverRoute', methods=['GET', 'POST'])
