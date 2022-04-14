@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!--Take in pickUp and dropOff location from customer-->
 <div align="center">
     <h1>Book a Ride</h1>
 </div>
 <head>
     {{map|safe}}
 </head>
-
 <form id=centerRide method="POST">
     <div id="container">
         <div id="ridePart1">
@@ -62,6 +62,7 @@
 
     <div id="btnSect" align="center">
         <button type="submit" id="rideButton" class="btn btn-outline-info">Next</button>
+    </div>
     </div>
 </form>
 {% endblock %}
