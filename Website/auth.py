@@ -1,4 +1,3 @@
-
 from flask import render_template, url_for, request, Blueprint, flash, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user
@@ -13,6 +12,7 @@ from matching import NewBooking
 import numpy as np
 
 auth = Blueprint('auth', __name__)
+
 
 # Route to login page
 @auth.route('/')
@@ -35,7 +35,7 @@ def login_post():
     login_user(user, remember=True)
     session['customerName'] = username
 
-    if user.onRide=='TRUE':
+    if user.onRide == 'TRUE':
         return redirect(url_for('auth.customerRoute'))
     return redirect(url_for('auth.home'))
 
@@ -43,9 +43,9 @@ def login_post():
 @auth.route('/customerRoute', methods=['GET', 'POST'])
 @login_required
 def customerRoute():
-    username=session['customerName']
+    username = session['customerName']
     user = User.query.filter_by(username=username).first()
-    session['userPath']=user.journeyRoute
+    session['userPath'] = user.journeyRoute
     if request.method == 'POST':
         if request.form['submit_button'] == 'logout':
             return redirect(url_for("auth.login"))
@@ -115,14 +115,14 @@ def driverLogin_post():
                 return redirect(url_for('auth.driverLogin'))
             # if driver exists, log driver in
             login_user(driver, remember=True)
-            session['driverAvailable'] = driver.isAvailable   # setting driver availability
+            session['driverAvailable'] = driver.isAvailable  # setting driver availability
             available = session['driverAvailable']
             # setting session variables
             session['driverUsername'] = username
             session['driverID'] = driver.id
 
             if available == 'TRUE':  # if driver working but not on job
-                session['driverloc']=driver.driverloc
+                session['driverloc'] = driver.driverloc
                 return redirect(url_for('auth.driverLocation'))  # redirect to location of curr driver
 
             elif available == 'DRIVING':  # if driver not working
@@ -155,22 +155,26 @@ def driverHome():
     if request.method == 'POST':
         if request.form['submit_button'] == 'submit':
             isAvailable = request.form.get('isAvailable')
-            if isAvailable =='TRUE':
+            if isAvailable == 'TRUE':
                 driverloc = request.form.get('startLoc')
                 session['driverloc'] = driverloc
-                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
+                    {'driverloc': driverloc})
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
+                    {'isAvailable': isAvailable})
                 db.session.commit()
                 return redirect(url_for('auth.driverLocation', startLoc=driverloc))
             else:
-                driverloc =''
-                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': driverloc})
-                db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': isAvailable})
+                driverloc = ''
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
+                    {'driverloc': driverloc})
+                db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
+                    {'isAvailable': isAvailable})
                 db.session.commit()
         elif request.form['submit_button'] == 'logout':
             return redirect(url_for('auth.driverLogin'))
 
-    return render_template("driverHome.html",map=m._repr_html_())
+    return render_template("driverHome.html", map=m._repr_html_())
 
 
 @auth.route('/driverRoute', methods=['GET', 'POST'])
@@ -185,10 +189,10 @@ def driverRoute():
             db.session.commit()
             return redirect(url_for("auth.driverHome"))
     driverPath = session['driverPath']
-    driverPath=driverPath.replace('[', '')
-    driverPath=driverPath.replace(']', '')
-    driverPath=driverPath.replace(',', '')
-    driverPath=driverPath.replace('', '')
+    driverPath = driverPath.replace('[', '')
+    driverPath = driverPath.replace(']', '')
+    driverPath = driverPath.replace(',', '')
+    driverPath = driverPath.replace('', '')
     driverPath = driverPath.split(' ')
 
     path = []
@@ -200,8 +204,8 @@ def driverRoute():
         if i != '':
             startindex = i
             break
-    for i in range(0,len(path)):
-        if path[i] == path[i-1]:
+    for i in range(0, len(path)):
+        if path[i] == path[i - 1]:
             temp = path[i]
     endindex = driverPath[-1]
     startLocation = (graph.locations[int(startindex)][0])
@@ -254,7 +258,8 @@ def driverLocation():
             return redirect(url_for("auth.driverHome"))
         elif request.form['submit_button'] == 'home':
             return redirect(url_for("auth.driverHome"))
-    return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername, startLocation=startLocation)
+    return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername,
+                           startLocation=startLocation)
 
 
 # Route to register page
@@ -273,7 +278,8 @@ def register():
             flash('Email address already exist, please use another email.', 'danger')
             return redirect(url_for('auth.register'))
 
-        new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email, onRide="", journeyRoute="")
+        new_user = User(username=username, password=generate_password_hash(password, method='sha256'), email=email,
+                        onRide="", journeyRoute="")
         db.session.add(new_user)
         db.session.commit()
         # login_user(user, remember=True)
@@ -305,7 +311,7 @@ def homebooked():
 def bookride():
     getDriver = drivertble.query.all()
     for driver in getDriver:
-        graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
+        graph.drivers.update({int(driver.id): [driver.username, driver.carplate]})
         if driver.isAvailable.lower() == 'true' and driver.driverloc is not None:
             if int(driver.driverloc) not in graph.driverLocation:
                 graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
@@ -325,7 +331,7 @@ def bookride():
         ).add_to(m)
     m.fit_bounds([locarr[0], locarr[-1]])
 
-    driverarr=[]
+    driverarr = []
     for drivers in graph.driverLocation:
         driverarr.append([graph.locations[int(drivers)][1], graph.locations[int(drivers)][2]])
     for i in range(0, len(driverarr)):
@@ -339,8 +345,8 @@ def bookride():
         start = request.form.get('pickUp')  # to replace with form.get.(=start)
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
 
-        return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end))
-    return render_template("bookride.html",map=m._repr_html_())
+        return redirect(url_for('auth.confirmride', startPoint=start, endPoint=end))
+    return render_template("bookride.html", map=m._repr_html_())
 
 
 @auth.route('/confirmride', methods=['GET', 'POST'])
@@ -352,13 +358,13 @@ def confirmride():
     start = request.args.get('startPoint', None)
     end = request.args.get('endPoint', None)
     customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
-    session['customerStart']=start
-    session['customerEnd']=end
+    session['customerStart'] = start
+    session['customerEnd'] = end
     path = []
     for i in customerPath:
         if i in graph.locations:
             path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
-    session['customerPath']=customerPath
+    session['customerPath'] = customerPath
     startLocation = (graph.locations[int(start)][0])
     endLocation = (graph.locations[int(end)][0])
 
@@ -383,19 +389,20 @@ def confirmride():
     m.fit_bounds([path[0], path[-1]])
 
     if request.method == 'POST':
-        return redirect(url_for('auth.rideDetails',customerDistance=customerDistance, startLocation=startLocation,
-    endLocation=endLocation, rideCost=rideCost))
+        return redirect(url_for('auth.rideDetails', customerDistance=customerDistance, startLocation=startLocation,
+                                endLocation=endLocation, rideCost=rideCost))
 
-    return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
-    endLocation=endLocation, rideCost=rideCost)
+    return render_template("confirmride.html", map=m._repr_html_(), customerDistance=customerDistance,
+                           startLocation=startLocation,
+                           endLocation=endLocation, rideCost=rideCost)
 
 
-@auth.route('/rideDetails', methods=['GET','POST'])
+@auth.route('/rideDetails', methods=['GET', 'POST'])
 @login_required
 def rideDetails():
     if request.method == 'POST':
         onRide = session['onRide']
-        if onRide =='TRUE':
+        if onRide == 'TRUE':
             return redirect(url_for("auth.homebooked"))
 
         return redirect(url_for("auth.home"))
@@ -420,7 +427,7 @@ def rideDetails():
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
             newDriver = Driver(driverName, driverStart)
             driverPath, driverDistance = newDriver.driverRoute(driverStart, int(start))
-            totalPath = np.concatenate((driverPath,customerPath))
+            totalPath = np.concatenate((driverPath, customerPath))
             path = []
             for i in driverPath:
                 if i in graph.locations:
@@ -438,15 +445,15 @@ def rideDetails():
             ).add_to(m)
             folium.Marker(
                 location=path[0],
-                icon = folium.Icon(color="green", icon="map-marker"),
+                icon=folium.Icon(color="green", icon="map-marker"),
                 popup=driverLocation, tooltip="Your Driver's Location"
             ).add_to(m)
 
             # Adding user location to map
             folium.Marker(
                 location=path[-1],
-                icon = folium.Icon(color="blue", icon="map-marker"),
-                popup = endLocation, tooltip = "Your Location"
+                icon=folium.Icon(color="blue", icon="map-marker"),
+                popup=endLocation, tooltip="Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
             updateDB(driverName, totalPath, customerName)
@@ -460,7 +467,7 @@ def rideDetails():
             # Adding user location to map
             folium.Marker(
                 location=path[0],
-                icon = folium.Icon(color="green", icon="map-marker"),
+                icon=folium.Icon(color="green", icon="map-marker"),
                 popup=startLocation, tooltip="Your Location"
             ).add_to(m)
             # Inserting customer start to path array for plotting of customer location in total path
@@ -472,12 +479,15 @@ def rideDetails():
                                    startLocation=startLocation,
                                    endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
                                    driverStatus='Driver has arrived!')
-        return render_template("rideDetails.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
-                                endLocation=endLocation,rideCost=rideCost, driverInfo=driverInfo, driverStatus='Driver is on the way')
+        return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
+                               startLocation=startLocation,
+                               endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
+                               driverStatus='Driver is on the way')
     # no driver available
     else:
         return render_template("noRide.html", customerDistance=customerDistance, startLocation=startLocation,
-                                endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
+                               endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
+
 
 #  Setting driver availability to 'DRIVING', upload customer journey path and setting onRide to true
 def updateDB(driverName, totalPath, customerName):
@@ -486,5 +496,5 @@ def updateDB(driverName, totalPath, customerName):
     db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
     db.session.query(User).filter(User.username == customerName).update({'journeyRoute': str(totalPath)})
     db.session.query(User).filter(User.username == customerName).update({'onRide': 'TRUE'})
-    session['onRide']='TRUE'
+    session['onRide'] = 'TRUE'
     db.session.commit()
