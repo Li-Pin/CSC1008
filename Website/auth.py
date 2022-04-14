@@ -330,7 +330,7 @@ def confirmride():
     getDriver = drivertble.query.all()
     for driver in getDriver:
         graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})
-        if driver.isAvailable.lower() == 'true':
+        if driver.isAvailable.lower() == 'true' and driver.driverloc is not None:
             if int(driver.driverloc) not in graph.driverLocation:
                 graph.driverLocation.update({int(driver.driverloc): [int(driver.id)]})
             elif int(driver.id) not in graph.driverLocation[int(driver.driverloc)]:
