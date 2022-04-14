@@ -6,7 +6,7 @@ def dijkstra(graph, startLoc, endLoc):
     graph.start = int(startLoc)
     # setting graph end to end location
     graph.end = int(endLoc)
-    # initialising all disance to location as Infinity for comparison
+    # initialising all distance to location as Infinity for comparison
     distTo = {v: float('inf') for v in range(graph.v)}
     # Distance from start to start is set to 0
     distTo[graph.start] = 0
@@ -19,7 +19,7 @@ def dijkstra(graph, startLoc, endLoc):
     # Run while there are still locations in queue
     while not Q.isEmpty():
         (temp, current_vertex) = Q.dequeue()
-        # Adding vertix to visited
+        # Adding vertex to visited
         graph.visited.append(current_vertex)
         # visiting neighbour of current vertex
         for neighbor in range(graph.v):
