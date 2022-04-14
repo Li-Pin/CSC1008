@@ -169,13 +169,25 @@ def driverHome():
                     {'isAvailable': isAvailable})
                 db.session.commit()
                 return redirect(url_for('auth.driverLocation', startLoc=driverloc))
-            else:
+            else: # here is driver
+                driverLoc = session['driverloc']
+                index = 0
+                for i in graph.driverLocation:
+                    if i == int(driverLoc):
+                        for j in graph.driverLocation[i]:
+                            driverID = session['driverID']
+                            if j == driverID:
+                                graph.driverLocation[i].pop(index)
+                                break
+                            index += 1
                 driverloc = ''
                 db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
                     {'driverloc': driverloc})
                 db.session.query(drivertble).filter(drivertble.username == driverUsername).update(
                     {'isAvailable': isAvailable})
                 db.session.commit()
+
+
         elif request.form['submit_button'] == 'logout':
             logout_user()
             return redirect(url_for('auth.driverLogin'))
@@ -258,6 +270,16 @@ def driverLocation():
     Driver(driverUsername, driverID)
     if request.method == 'POST':
         if request.form['submit_button'] == 'endShift':
+            driverLoc = session['driverloc']
+            index = 0
+            for i in graph.driverLocation:
+                if i == int(driverLoc):
+                    for j in graph.driverLocation[i]:
+                        driverID = session['driverID']
+                        if j == driverID:
+                            graph.driverLocation[i].pop(index)
+                            break
+                        index += 1
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': ''})
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'FALSE'})
             db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'journeyRoute': ''})
