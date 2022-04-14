@@ -81,8 +81,9 @@ Driver     --  driver1  dpass1
 
 ### Algorithms
 * Breadth First Search (Searching of available driver)
-* Dijkstra (Shortest path)
 * Merge Sort (Sort nearest neighbour of BFS)
+* Dijkstra (Shortest path)
+
 
 # Contributors
 * [Low Li Pin](https://github.com/Li-Pin)
