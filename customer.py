@@ -20,7 +20,7 @@ class Customer:
         dij = dijkstra(g, self.start, self.end)
 
         # get journey distance from array in printSolution function
-        self.pathDistance = g.printSolution(dij, g.parent, self.pathRoute)\
+        self.pathDistance = g.printSolution(dij, g.parent, self.pathRoute)
 
         # return value when function called
         return self.pathRoute, self.pathDistance
