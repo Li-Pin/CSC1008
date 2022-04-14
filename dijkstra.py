@@ -1,5 +1,4 @@
-from queueADT import Queue
-
+from queue import PriorityQueue
 
 def dijkstra(graph, startLoc, endLoc):
     # setting graph start to starting location
@@ -13,12 +12,12 @@ def dijkstra(graph, startLoc, endLoc):
     # initialising parent to keep track of path taken
     graph.parent = {v: int(-1) for v in range(graph.v)}
     # initialising queueADT to keep track of cost and neighbour
-    Q = Queue()
-    Q.enqueue((0, graph.start))
+    pQ = PriorityQueue()
+    pQ.put((0, graph.start))
     graph.visited.clear()
     # Run while there are still locations in queue
-    while not Q.isEmpty():
-        (temp, current_vertex) = Q.dequeue()
+    while not pQ.empty():
+        (temp, current_vertex) = pQ.get()
         # Adding vertex to visited
         graph.visited.append(current_vertex)
         # visiting neighbour of current vertex
@@ -33,7 +32,7 @@ def dijkstra(graph, startLoc, endLoc):
                     old_cost = distTo[neighbor]
                     new_cost = distTo[current_vertex] + distance
                     if new_cost < old_cost:
-                        Q.enqueue((new_cost, neighbor))
+                        pQ.put((new_cost, neighbor))
                         distTo[neighbor] = new_cost
                         graph.parent[neighbor] = current_vertex
     # Return distTo for finding path
