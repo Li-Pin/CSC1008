@@ -33,7 +33,7 @@ Design and implement an on-demnad ride hailing application to allow user to requ
   ```
 * [PyCharm](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html)
 
-##### Setting up the Virtual Environments
+### Installation
  * Flask
    ```sh
     pip install Flask
@@ -50,3 +50,20 @@ Design and implement an on-demnad ride hailing application to allow user to requ
    ```sh
     pip install folium
    ```
+### Running the Project
+1. Clone the repo
+   ```sh
+   git clone https://github.com/Li-Pin/CSC1008.git
+   ```
+2. Install additional packages
+   
+3. Run the main.py
+
+# Features
+
+# Contributor
+* [Li Pin](https://github.com/Li-Pin)
+* [Perpetua](https://github.com/pepperso07)
+* [Shermaine](https://github.com/shermainepeh)
+* [Kenny](https://github.com/Kenny-DevTech)
+* [Tan Yi](https://github.com/Excalyibur)
