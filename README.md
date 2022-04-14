@@ -2,10 +2,10 @@
 
 Lyft Ride Hailing
 
-## About the project
+# About the project
 Design and implement an on-demnad ride hailing application to allow user to request for rides.
 
-## Installation guide
+# Installation guide
 
 * [Python 3.9.6](https://www.python.org/)
 * [pip 22.0.4](https://pypi.org/project/pip/)
