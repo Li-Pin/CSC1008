@@ -1,5 +1,3 @@
-from sqlalchemy import null
-from flask import session as s
 from graphADT import g
 from dijkstra import dijkstra
 
@@ -14,10 +12,10 @@ class Driver:
         self.pathRoute = []
         self.pathDistance = 0
 
-    # Running dijsktra to calculate shortest path from driver to customer location and return Path and Distance.
+    # Running dijkstra to calculate the shortest path from driver to customer location and return Path and Distance.
     def driverRoute(self, driverLoc, customerLoc):
         self.start = driverLoc
         self.end = customerLoc
-        C = dijkstra(g, str(self.start), self.end)
-        self.pathDistance = g.printSolution(C, g.parent, self.pathRoute)
+        dij = dijkstra(g, str(self.start), self.end)
+        self.pathDistance = g.printSolution(dij, g.parent, self.pathRoute)
         return self.pathRoute, self.pathDistance
