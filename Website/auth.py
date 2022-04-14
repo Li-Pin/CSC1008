@@ -177,8 +177,14 @@ def driverHome():
 @auth.route('/driverRoute', methods=['GET', 'POST'])
 @login_required
 def driverRoute():
+    driverUsername = session['driverUsername']
     if request.method == 'POST':
-        return redirect(url_for("auth.driverLogin"))
+        if request.form['submit_button'] == 'logout':
+            return redirect(url_for("auth.driverLogin"))
+        elif request.form['submit_button'] == 'completeTrip':
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'TRUE'})
+            db.session.commit()
+            return redirect(url_for("auth.driverHome"))
     driverPath = session['driverPath']
     driverPath=driverPath.replace('[', '')
     driverPath=driverPath.replace(']', '')
@@ -241,11 +247,14 @@ def driverLocation():
     ).add_to(m)
     Driver(driverUsername, driverID)
     if request.method == 'POST':
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': ''})
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'FALSE'})
-        db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'journeyRoute': ''})
-        db.session.commit()
-        return redirect(url_for("auth.driverHome"))
+        if request.form['submit_button'] == 'endShift':
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'driverloc': ''})
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'isAvailable': 'FALSE'})
+            db.session.query(drivertble).filter(drivertble.username == driverUsername).update({'journeyRoute': ''})
+            db.session.commit()
+            return redirect(url_for("auth.driverHome"))
+        elif request.form['submit_button'] == 'home':
+            return redirect(url_for("auth.driverHome"))
     return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername, startLocation=startLocation)
 
 
