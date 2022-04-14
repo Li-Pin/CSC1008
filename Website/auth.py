@@ -44,7 +44,13 @@ def login_post():
 @login_required
 def customerRoute():
     if request.method == 'POST':
-        return redirect(url_for("auth.login"))
+        if request.form['submit_button'] == 'logout':
+            return redirect(url_for("auth.login"))
+        elif request.form['submit_button'] == 'completeTrip':
+            username = session['customerName']
+            db.session.query(User).filter(User.username == username).update({'onRide': 'FALSE'})
+            db.session.commit()
+            return redirect(url_for("auth.home"))
     customerPath = session['userPath']
     customerPath = customerPath.replace('[', '')
     customerPath = customerPath.replace(']', '')
@@ -214,10 +220,6 @@ def driverRoute():
                            startLocation=startLocation, endLocation=endLocation)
 
 
-
-
-
-
 # Route to driver location
 @auth.route('/driverLocation', methods=['GET', 'POST'])
 @login_required
@@ -242,6 +244,7 @@ def driverLocation():
         db.session.commit()
         return redirect(url_for("auth.driverHome"))
     return render_template("driverLocation.html", map=m._repr_html_(), driverUsername=driverUsername, startLocation=startLocation)
+
 
 # Route to register page
 @auth.route('/register', methods=['GET', 'POST'])
@@ -305,7 +308,6 @@ def bookride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
-
     getDriver = drivertble.query.all()
     for driver in getDriver:
         graph.drivers.update({int(driver.id): [driver.username,driver.carplate]})

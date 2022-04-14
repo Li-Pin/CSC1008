@@ -4,16 +4,9 @@
 <div align="center">
     <h1>Book a Ride</h1>
 </div>
-<html>
 <head>
-{{map|safe}}
+    {{map|safe}}
 </head>
-<body>
-
-</body>
-
-
-</html>
 
 <form id=centerRide method="POST">
     <div id="container">
@@ -39,8 +32,10 @@
                 <option value="16">BLK 11 Punggol Field</option>
                 <option value="17">BLK 160B Punggol Central</option>
                 <option value="18">BLK 653A Punggol Drive</option>
-                \ </select><br>
+            </select><br>
+        </div>
 
+        <div id="ridePart2">
             <label for="dropOff">Drop Off:</label><br>
             <select name="dropOff" id="dropOff" required>
                 <option value="0">BLK 258A Punggol Field</option>
@@ -63,51 +58,8 @@
                 <option value="17">BLK 160B Punggol Central</option>
                 <option value="18">BLK 653A Punggol Drive</option>
             </select><br>
-
-            <label for="date">Date:</label>
-            <input type="date" class="form-control" format='%Y-%m-%d' name="date" id="date" required>
-            <label for="time">Time:</label>
-            <input type="time" class="form-control" format='%H-%M' name="time" id="time" required>
         </div>
 
-        <div id="ridePart2">
-            <label for="carType">Car type:</label><br>
-            <select name="carType" id="carType">
-                <option value="Volvo">Volvo</option>
-                <option value="Hyundai">Hyundai</option>
-                <option value="Toyota">Toyota</option>
-                <option value="Chevrolet">Chevrolet</option>
-            </select><br>
-
-            <label for="pax">Pax:</label><br>
-            <select name="pax" id="pax">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select><br>
-
-            <label for="paym">Payment:</label><br>
-            <select name="paym" id="paym">
-                <option value="Cash">Cash</option>
-                <option value="PayNow">PayNow</option>
-                <option value="PayLah">PayLah</option>
-                <option value="Credit card">CreditCard</option>
-            </select><br>
-
-            <label for="searchRange">Search Range:</label><br>
-            <select name="searchRange" id="searchRange">
-                <option value="noPref">No Preference</option>
-                <option value="0.5">500M</option>
-                <option value="1">1KM</option>
-                <option value="1.5">1.5KM</option>
-                <option value="2">2KM</option>
-                <option value="2.5">2.5KM</option>
-                <option value="3">3KM</option>
-            </select>
-        </div>
-    </div>
     <div id="btnSect" align="center">
         <button type="submit" id="rideButton" class="btn btn-outline-info">Next</button>
     </div>

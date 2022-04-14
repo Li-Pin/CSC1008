@@ -14,13 +14,15 @@
           <p>Driver is at: {{startLocation}}</p>
           <p>Drop off is at: {{endLocation}}</p>
           <div id="statusBox">
-              <h5>{{driverStatus}}</h5>
+              <h5>Status:</h5>
+              <h6>{{driverStatus}}</h6>
           </div>
 
             {{ map | safe }}
           <br><br/>
           <form method="POST">
-            <button type="submit" id="customerLogout" class="btn btn-outline-info">Logout</button>
+              <button type="submit" id="customerLogout" class="btn btn-outline-info" name="submit_button" value="logout">Logout</button>
+              <button type="submit" id="completeTrip" class="btn btn-outline-info" name="submit_button" value="completeTrip">Complete Trip</button>
           </form>
           <br><br/>
           </body>

@@ -85,7 +85,8 @@
 }
 
 #rideButton{
-    width: 8%;
+    width: 15%;
+    margin-top: 25%;
 }
 
 #container{
@@ -127,6 +128,10 @@
     float: right;
 }
 
+#ridePart2{
+    float: right;
+}
+
 #driverButton{
     margin-top: 7%;
     margin-left: 20%;
@@ -141,12 +146,24 @@
 }
 
 #statusBox{
-    background-color: red;
+    background-color: #17A2B8;
+    color: white;
     width: 200px;
+    text-align: center;
+    padding:2px;
+    border-radius: 5px;
+    margin-left: 82%;
+    margin-top: -7.5%;
+    margin-bottom: 2%;
+}
+
+#completeTrip{
+    margin-left: 50%;
+    margin-top: -16%;
 }
 
 #customerLogout{
-    margin-left: 46%;
+    margin-left: 40%;
     margin-bottom: 5%;
 }
 
