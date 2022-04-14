@@ -299,9 +299,8 @@ def bookride():
     if request.method == 'POST':
         start = request.form.get('pickUp')  # to replace with form.get.(=start)
         end = request.form.get('dropOff')  # to replace with form.get.(=end)
-        maxDist = request.form.get('searchRange')
 
-        return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end,maxDist=maxDist))
+        return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end))
     return render_template("bookride.html",map=m._repr_html_())
 
 
@@ -322,7 +321,6 @@ def confirmride():
     newCustomer = customer.Customer(session.get('customerName', None))
     start = request.args.get('startPoint', None)
     end = request.args.get('endPoint', None)
-    maxDist = request.args.get('maxDist', None)
     customerPath, customerDistance = newCustomer.getCustomerRide(start, end)  # get from DB
     session['customerStart']=start
     session['customerEnd']=end
@@ -356,7 +354,7 @@ def confirmride():
 
     if request.method == 'POST':
         return redirect(url_for('auth.rideDetails',customerDistance=customerDistance, startLocation=startLocation,
-    endLocation=endLocation, maxDist=maxDist, rideCost=rideCost))
+    endLocation=endLocation, rideCost=rideCost))
 
     return render_template("confirmride.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
     endLocation=endLocation, rideCost=rideCost)
@@ -371,15 +369,12 @@ def rideDetails():
     startLocation = request.args.get('startLocation', None)
     endLocation = request.args.get('endLocation', None)
     customerDistance = request.args.get('customerDistance', None)
-    maxDist = request.args.get('maxDist', None)
     rideCost = request.args.get('rideCost', None)
-    if maxDist =="noPref":
-        maxDist=99999999
 
     customerName = session['customerName']
     start = session['customerStart']
     end = session['customerEnd']
-    booking = NewBooking(int(start), float(maxDist), customerName)
+    booking = NewBooking(int(start), customerName)
     driverStart, driverID, driverName = booking.finddriver()
     if driverStart != 'No driver':
         customerPath = session['customerPath']
