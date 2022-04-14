@@ -4,7 +4,7 @@
     <img src="https://github.com/Li-Pin/CSC1008/blob/main/Website/static/Images/pngegg.png" alt="Lift Ride Hailing" width="100" height="80">
   </a>
 
-  <h3 align="center">Lift Ride Hailing</h3>
+  <h1 align="center">Lift Ride Hailing</h1>
 </div>
 
 # About The Project
@@ -18,6 +18,8 @@ Design and implement an on-demand ride hailing application to allow user to requ
 * [Flask-SQLAlchemy 2.5.1](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Folium 0.12.1.post1](https://python-visualization.github.io/folium/)
 * JSON
+* HTML
+* CSS
 
 # Getting Started
 
