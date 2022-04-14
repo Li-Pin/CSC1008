@@ -74,7 +74,7 @@ Driver     --  driver1  dpass1
 * Route/Location map
 
 ###### Driver 
-* Login, Logou
+* Login, Logout
 * Start/End shift
 * Allocate start shift location
 * Route/Location map
