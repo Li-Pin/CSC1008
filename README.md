@@ -1,8 +1,9 @@
+[![Contributors][contributors-shield]][contributors-url]
 ## CSC1008 Data Structures and Algorith
 
 Lyft Ride Hailing
 
-# About the project
+# About The Project
 Design and implement an on-demnad ride hailing application to allow user to request for rides.
 
 # Installation guide
