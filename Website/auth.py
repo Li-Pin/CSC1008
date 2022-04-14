@@ -110,7 +110,7 @@ def driverLogin_post():
             username = request.form.get('username')
             password = request.form.get('password')
             driver = drivertble.query.filter_by(username=username).first()  # getting driver details
-            if not driver or not driver.password:
+            if not driver or password != driver.password:
                 flash('Please check your login details and try again.', 'danger')
                 return redirect(url_for('auth.driverLogin'))
             # if driver exists, log driver in
