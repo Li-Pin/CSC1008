@@ -3,6 +3,7 @@ from dijkstra import dijkstra
 
 
 class Customer:
+    # Constructor for customer's journey information
     def __init__(self, name):
         self.name = name
         self.start = None
@@ -10,9 +11,16 @@ class Customer:
         self.pathRoute = []
         self.pathDistance = 0
 
-    def getCustomerRide(self,start,end):
+    # to get customer's journey route and distance
+    def getCustomerRide(self, start, end):
         self.start = start
         self.end = end
-        C = dijkstra(g, self.start, self.end)
-        self.pathDistance = g.printSolution(C, g.parent, self.pathRoute)
+
+        # call dijkstra algorithm using customer's start and end points as parameters
+        dij = dijkstra(g, self.start, self.end)
+
+        # get journey distance from array in printSolution function
+        self.pathDistance = g.printSolution(dij, g.parent, self.pathRoute)
+
+        # return value when function called
         return self.pathRoute, self.pathDistance
