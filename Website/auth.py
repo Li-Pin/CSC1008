@@ -414,11 +414,7 @@ def rideDetails():
                 popup = endLocation, tooltip = "Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)})
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
-            db.session.query(User).filter(User.username == customerName).update({'journeyRoute': str(totalPath)})
-            db.session.query(User).filter(User.username == customerName).update({'onRide': 'TRUE'})
-            db.session.commit()
+            updateDatabase(driverName, totalPath, customerName)
         else:  # driver at current location
             path = []
             path.append([graph.locations[int(start)][1], graph.locations[int(start)][2]])
@@ -430,11 +426,7 @@ def rideDetails():
             ).add_to(m)
             customerPath.insert(0, int(start))
             totalPath = customerPath
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'journeyRoute': str(totalPath)})
-            db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
-            db.session.query(User).filter(User.username == customerName).update({'journeyRoute': str(totalPath)})
-            db.session.query(User).filter(User.username == customerName).update({'onRide': 'TRUE'})
-            db.session.commit()
+            updateDatabase(driverName, totalPath, customerName)
             return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
                                    startLocation=startLocation,
                                    endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
@@ -445,3 +437,10 @@ def rideDetails():
         return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
 
+def updateDatabase(driverName, totalPath, customerName):
+    db.session.query(drivertble).filter(drivertble.username == driverName).update(
+        {'journeyRoute': str(totalPath)})
+    db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
+    db.session.query(User).filter(User.username == customerName).update({'journeyRoute': str(totalPath)})
+    db.session.query(User).filter(User.username == customerName).update({'onRide': 'TRUE'})
+    db.session.commit()
