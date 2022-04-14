@@ -337,7 +337,7 @@ def bookride():
             icon=folium.Icon(color="blue", icon="map-marker"), tooltip=locationName
         ).add_to(m)
     m.fit_bounds([locarr[0], locarr[-1]])
-
+    # Plotting of driver locations on map
     driverarr = []
     for drivers in graph.driverLocation:
         driverarr.append([graph.locations[int(drivers)][1], graph.locations[int(drivers)][2]])
@@ -361,8 +361,10 @@ def bookride():
 @auth.route('/confirmride', methods=['GET', 'POST'])
 @login_required
 def confirmride():
+    # Declaring constant variable for calculations
     baseFare = 4.05  # taken from comfortdelgo website
     perKMPrice = 0.7  # taken from comfortdelgo website
+    # Intialising new customer class
     newCustomer = customer.Customer(session.get('customerName', None))
     start = request.args.get('startPoint', None)
     end = request.args.get('endPoint', None)
@@ -370,18 +372,20 @@ def confirmride():
     session['customerStart'] = start
     session['customerEnd'] = end
     path = []
+    # Setting path for map to draw route
     for i in customerPath:
         if i in graph.locations:
             path.append([graph.locations[int(i)][1], graph.locations[int(i)][2]])
     session['customerPath'] = customerPath
     startLocation = (graph.locations[int(start)][0])
     endLocation = (graph.locations[int(end)][0])
-
+    # Calculating ride cost based on ComfortDelgro website
     rideCost = baseFare + customerDistance * perKMPrice
     rideCost = round(rideCost, 2)
     customerDistance = round(customerDistance, 2)
+    # Initialising Map
     m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
-
+    # Plotting of map
     plugins.AntPath(
         locations=path
     ).add_to(m)
@@ -397,6 +401,7 @@ def confirmride():
     ).add_to(m)
     m.fit_bounds([path[0], path[-1]])
 
+    # Redirect to rideDetails with ride information
     if request.method == 'POST':
         return redirect(url_for('auth.rideDetails', customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost))
@@ -408,7 +413,7 @@ def confirmride():
 
 @auth.route('/rideDetails', methods=['GET', 'POST'])
 @login_required
-def rideDetails(): # i stopped here
+def rideDetails():
     if request.method == 'POST':
         onRide = session['onRide']
         # if user already has a ride, redirect to show current ride (homebooked.html)
