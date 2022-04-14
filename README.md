@@ -28,9 +28,6 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 
 ##### Creating a Virtual Environments
 * [VS Code](https://code.visualstudio.com/docs/python/environments)
- ```sh
-  python -m venv .venv
-  ```
   ```sh
   python -m venv .venv
   ```
