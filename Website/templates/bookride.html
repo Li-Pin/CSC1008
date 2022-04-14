@@ -5,6 +5,15 @@
 <div align="center">
     <h1>Book a Ride</h1>
 </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mb-3" role="alert" id="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 <head>
     {{map|safe}}
 </head>

@@ -336,9 +336,11 @@ def bookride():
     m.fit_bounds([locarr[0], locarr[-1]])
 
     if request.method == 'POST':
-        start = request.form.get('pickUp')  # to replace with form.get.(=start)
-        end = request.form.get('dropOff')  # to replace with form.get.(=end)
-
+        start = request.form.get('pickUp')
+        end = request.form.get('dropOff')
+        if start == end:
+            flash('Your start and end location are the same!', 'danger')
+            return redirect(url_for('auth.bookride'))
         return redirect(url_for('auth.confirmride',startPoint=start,endPoint=end))
     return render_template("bookride.html",map=m._repr_html_())
 
@@ -392,30 +394,35 @@ def confirmride():
 
 @auth.route('/rideDetails', methods=['GET','POST'])
 @login_required
-def rideDetails():
+def rideDetails(): # i stopped here
     if request.method == 'POST':
         onRide = session['onRide']
+        # if user already has a ride, redirect to show current ride (homebooked.html)
         if onRide =='TRUE':
             return redirect(url_for("auth.homebooked"))
-
         return redirect(url_for("auth.home"))
 
+    # getting variables from previous function
     startLocation = request.args.get('startLocation', None)
     endLocation = request.args.get('endLocation', None)
     customerDistance = request.args.get('customerDistance', None)
     rideCost = request.args.get('rideCost', None)
-
+    # getting variables from respective session variables
     customerName = session['customerName']
     start = session['customerStart']
     end = session['customerEnd']
+    # initialise new booking to match driver and customer
     booking = NewBooking(int(start), customerName)
     driverStart, driverID, driverName = booking.finddriver()
     # if there is driver
     if driverStart != 'No driver':
-        #
+        # Update customerPath with session customerPath
         customerPath = session['customerPath']
+        # driverInfo to be passed to html
         driverInfo = 'Your Driver is: ' + driverName
+        # getting data from database
         drivertble.query.filter(drivertble.id == int(driverID)).update({'driverloc': int(end)})
+        # if driver and passenger are not at the same location
         if int(driverStart) != int(start):
             # update driverID in DB isAvailable to not True, set current customer to = CustomerName, CustomerLoc = Start
             newDriver = Driver(driverName, driverStart)
