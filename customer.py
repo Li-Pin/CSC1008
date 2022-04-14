@@ -1,9 +1,8 @@
 from graphADT import g
-from djikstra import dijkstra
+from dijkstra import dijkstra
 
 
 class Customer:
-
     def __init__(self, name):
         self.name = name
         self.start = None

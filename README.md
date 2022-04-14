@@ -1,17 +1,52 @@
-[![Contributors][contributors-shield]][contributors-url]
-## CSC1008 Data Structures and Algorith
+<br />
+<div align="center">
+  <a href="https://github.com/Li-Pin/CSC1008">
+    <img src="https://github.com/Li-Pin/CSC1008/blob/main/Website/static/Images/pngegg.png" alt="Lift Ride Hailing" width="100" height="80">
+  </a>
 
-Lyft Ride Hailing
+  <h3 align="center">Lift Ride Hailing</h3>
+</div>
 
 # About The Project
 Design and implement an on-demnad ride hailing application to allow user to request for rides.
 
-# Installation guide
+# Built With
 
 * [Python 3.9.6](https://www.python.org/)
-* [pip 22.0.4](https://pypi.org/project/pip/)
 * [Flask 2.1.1](https://flask.palletsprojects.com/en/2.1.x/)
 * [Flask-Login 0.6.0](https://flask-login.readthedocs.io/en/latest/)
 * [Flask-SQLAlchemy 2.5.1](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Folium 0.12.1.post1](https://python-visualization.github.io/folium/)
-* [numpy 1.22.3](https://numpy.org/)
+
+# Getting Started
+
+### Prerequisites
+
+##### Environment
+  * [Visual Studio Code](https://code.visualstudio.com/docs/languages/python)
+  * [PyCharm](https://www.jetbrains.com/pycharm/)
+
+##### Creating a Virtual Environments
+* [VS Code](https://code.visualstudio.com/docs/python/environments)
+  ```sh
+  python -m venv .venv
+  ```
+* [PyCharm](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html)
+
+##### Setting up the Virtual Environments
+ * Flask
+   ```sh
+    pip install Flask
+   ```
+ * Flask-Login
+   ```sh
+    pip install flask-login
+   ```
+* Flask-SQLAlchemy
+   ```sh
+    pip install -U Flask-SQLAlchemy
+   ```
+* Folium
+   ```sh
+    pip install folium
+   ```
