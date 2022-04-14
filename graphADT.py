@@ -1,16 +1,12 @@
 import json
 import os
-import random
 from math import radians, cos, sin, asin, sqrt
-
 from mergeSort import mergeSort
 
 
 class Graph:
     file = open(os.path.abspath('JSON\junction.json'))
     data = json.load(file)
-
-
 
     def __init__(self):
         self.edgeGraph = dict()
@@ -74,7 +70,6 @@ class Graph:
     # from source to j
     # using parent array
     def printPath(self, parent, j, pathArray):
-
         # Base Case : If j is source
         if parent[j] == -1:
             pathArray.append(j)
@@ -87,8 +82,6 @@ class Graph:
     # the constructed distance
     # array
     def printSolution(self, dist, parent, pathArray):
-
-        src = 0
         for i in range(0, len(dist)):
             if i == self.end:
                 self.printPath(parent, i, pathArray)
