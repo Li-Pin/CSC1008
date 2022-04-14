@@ -5,14 +5,16 @@ from dijkstra import dijkstra
 
 
 class Driver:
+    # Driver class used to store driver details pathRoute = route for driver, pathDistance = distance
     def __init__(self, name, id):
-        self.name = name  # replace with forms.get.(driver name)
+        self.name = name
         self.id = id
         self.start = None
         self.end = None
         self.pathRoute = []
         self.pathDistance = 0
 
+    # Running dijsktra to calculate shortest path from driver to customer location and return Path and Distance.
     def driverRoute(self, driverLoc, customerLoc):
         self.start = driverLoc
         self.end = customerLoc
