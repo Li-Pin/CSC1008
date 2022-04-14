@@ -153,7 +153,6 @@ def driverHome():
         ).add_to(m)
     m.fit_bounds([locarr[0], locarr[-1]])
 
-
     if request.method == 'POST':
         if request.form['submit_button'] == 'submit':
             isAvailable = request.form.get('isAvailable')
@@ -335,7 +334,6 @@ def bookride():
             location=driverarr[i],
             icon=folium.Icon(color="green", icon="map-marker"), tooltip="Driver here!"
         ).add_to(m)
-        print('this is ran')
     m.fit_bounds([locarr[0], locarr[-1]])
 
     if request.method == 'POST':

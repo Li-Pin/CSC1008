@@ -8,7 +8,7 @@
 </div>
 
 # About The Project
-Design and implement an on-demnad ride hailing application to allow user to request for rides.
+Design and implement an on-demand ride hailing application to allow user to request for rides.
 
 # Built With
 
@@ -17,6 +17,7 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 * [Flask-Login 0.6.0](https://flask-login.readthedocs.io/en/latest/)
 * [Flask-SQLAlchemy 2.5.1](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Folium 0.12.1.post1](https://python-visualization.github.io/folium/)
+* JSON
 
 # Getting Started
 
@@ -51,7 +52,7 @@ Design and implement an on-demnad ride hailing application to allow user to requ
     pip install folium
    ```
 ### Running the Project
-1. Clone the repo
+1. Clone the repository
    ```sh
    git clone https://github.com/Li-Pin/CSC1008.git
    ```
@@ -60,8 +61,23 @@ Design and implement an on-demnad ride hailing application to allow user to requ
 3. Run the main.py
 
 # Features
+### Account
+###### Passenger 
+* Create account, Login, Logout
+* Book a ride
+* Route/Location map
 
-# Contributor
+###### Driver 
+* Login, Logout
+* Start/End shift
+* Allocate start location
+
+### Algorithms
+* Breadth First Search (Searching of available driver)
+* Dijkstra (Shortest path)
+* Merge Sort (Sort nearest neighbour of BFS)
+
+# Contributors
 * [Li Pin](https://github.com/Li-Pin)
 * [Perpetua](https://github.com/pepperso07)
 * [Shermaine](https://github.com/shermainepeh)
