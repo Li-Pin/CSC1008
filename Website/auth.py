@@ -340,7 +340,8 @@ def bookride():
     # Plotting of driver locations on map
     driverarr = []
     for drivers in graph.driverLocation:
-        driverarr.append([graph.locations[int(drivers)][1], graph.locations[int(drivers)][2]])
+        if len(graph.driverLocation[drivers])>0:
+            driverarr.append([graph.locations[int(drivers)][1], graph.locations[int(drivers)][2]])
     for i in range(0, len(driverarr)):
         folium.Marker(
             location=driverarr[i],
