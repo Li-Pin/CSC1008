@@ -62,6 +62,10 @@ Design and implement an on-demand ride hailing application to allow user to requ
    
 3. Run the main.py
 
+4. Login credentials:
+Customer   --  user1    upass1
+Driver     --  driver1  dpass1
+
 # Features
 ### Account
 ###### Passenger 
