@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!--No driver available for booking currently-->
     <div align="center">
-        <h1>Confirm your booking</h1>
+        <h1>{{driverStatus}}s available</h1>
     </div>
-
         <html>
           <head>
             <title>Confirm Ride</title>
@@ -12,16 +12,11 @@
             <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
           </head>
           <body>
-          <h3>Ride Info</h3>
-          <p>Ride is from: {{startLocation}} </p>
-          <p>Ride is to: {{endLocation}} </p>
-          <p>Distance is: {{customerDistance}} KM</p>
-          <p>Ride Cost is: ${{rideCost}}</p>
-          <p>{{driverInfo}}</p>
-          <p>{{driverStatus}}</p>
+          <div id="noRide">
+              <h5>Sorry, there are no available drivers at the moment. Please book at a later time.</h5>
+          </div>
 
-            <div id='mapdiv' style='height:800px;'></div>
-
+          <a href="/home" id="noRideHome" class="btn btn-outline-info">Home</a>
 
           </body>
 

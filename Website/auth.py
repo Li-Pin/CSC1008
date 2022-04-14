@@ -60,7 +60,6 @@ def customerRoute():
     customerPath = customerPath.replace(',', '')
     customerPath = customerPath.replace('', '')
     customerPath = customerPath.split(' ')
-    print(customerPath)
     path = []
     for i in customerPath:
         if i != '':
@@ -396,7 +395,6 @@ def confirmride():
 def rideDetails():
     if request.method == 'POST':
         onRide = session['onRide']
-        print('test', onRide)
         if onRide =='TRUE':
             return redirect(url_for("auth.homebooked"))
 
@@ -412,7 +410,9 @@ def rideDetails():
     end = session['customerEnd']
     booking = NewBooking(int(start), customerName)
     driverStart, driverID, driverName = booking.finddriver()
+    # if there is driver
     if driverStart != 'No driver':
+        #
         customerPath = session['customerPath']
         driverInfo = 'Your Driver is: ' + driverName
         drivertble.query.filter(drivertble.id == int(driverID)).update({'driverloc': int(end)})
@@ -429,8 +429,10 @@ def rideDetails():
             endLocation = (graph.locations[int(end)][0])
             driverLocation = (graph.locations[driverStart][0])
 
+            # Initialising Map
             m = folium.Map(location=[1.3541, 103.8198], tiles='OpenStreetMap', zoom_start=12, control_scale=True)
 
+            # Drawing path route
             plugins.AntPath(
                 locations=path
             ).add_to(m)
@@ -439,36 +441,46 @@ def rideDetails():
                 icon = folium.Icon(color="green", icon="map-marker"),
                 popup=driverLocation, tooltip="Your Driver's Location"
             ).add_to(m)
+
+            # Adding user location to map
             folium.Marker(
                 location=path[-1],
                 icon = folium.Icon(color="blue", icon="map-marker"),
                 popup = endLocation, tooltip = "Your Location"
             ).add_to(m)
             m.fit_bounds([path[0], path[-1]])
-            updateDatabase(driverName, totalPath, customerName)
-        else:  # driver at current location
+            updateDB(driverName, totalPath, customerName)
+        # driver at current location
+        else:
+            # initialising array to store path coordinates
             path = []
             path.append([graph.locations[int(start)][1], graph.locations[int(start)][2]])
+            # initialising map
             m = folium.Map(location=path[0], tiles='OpenStreetMap', zoom_start=18, control_scale=True)
+            # Adding user location to map
             folium.Marker(
                 location=path[0],
                 icon = folium.Icon(color="green", icon="map-marker"),
                 popup=startLocation, tooltip="Your Location"
             ).add_to(m)
+            # Inserting customer start to path array for plotting of customer location in total path
             customerPath.insert(0, int(start))
+            # Assigning customerPath to totalPath
             totalPath = customerPath
-            updateDatabase(driverName, totalPath, customerName)
+            updateDB(driverName, totalPath, customerName)
             return render_template("rideDetails.html", map=m._repr_html_(), customerDistance=customerDistance,
                                    startLocation=startLocation,
                                    endLocation=endLocation, rideCost=rideCost, driverInfo=driverInfo,
                                    driverStatus='Driver has arrived!')
         return render_template("rideDetails.html", map=m._repr_html_(),customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation,rideCost=rideCost, driverInfo=driverInfo, driverStatus='Driver is on the way')
-    else: # no driver available
-        return render_template("rideisHere.html", customerDistance=customerDistance, startLocation=startLocation,
+    # no driver available
+    else:
+        return render_template("noRide.html", customerDistance=customerDistance, startLocation=startLocation,
                                 endLocation=endLocation, rideCost=rideCost, driverStatus=driverStart)
 
-def updateDatabase(driverName, totalPath, customerName):
+#  Setting driver availability to 'DRIVING', upload customer journey path and setting onRide to true
+def updateDB(driverName, totalPath, customerName):
     db.session.query(drivertble).filter(drivertble.username == driverName).update(
         {'journeyRoute': str(totalPath)})
     db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
