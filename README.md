@@ -18,6 +18,8 @@ Design and implement an on-demand ride hailing application to allow user to requ
 * [Flask-SQLAlchemy 2.5.1](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Folium 0.12.1.post1](https://python-visualization.github.io/folium/)
 * JSON
+* HTML
+* CSS
 
 # Getting Started
 
