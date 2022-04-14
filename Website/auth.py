@@ -34,7 +34,7 @@ def login_post():
     # if user exists, log user in
     login_user(user, remember=True)
     session['customerName'] = username
-    session['userPath']=user.journeyRoute
+
     if user.onRide=='TRUE':
         return redirect(url_for('auth.customerRoute'))
     return redirect(url_for('auth.home'))
@@ -43,6 +43,9 @@ def login_post():
 @auth.route('/customerRoute', methods=['GET', 'POST'])
 @login_required
 def customerRoute():
+    username=session['customerName']
+    user = User.query.filter_by(username=username).first()
+    session['userPath']=user.journeyRoute
     if request.method == 'POST':
         if request.form['submit_button'] == 'logout':
             return redirect(url_for("auth.login"))
@@ -57,7 +60,7 @@ def customerRoute():
     customerPath = customerPath.replace(',', '')
     customerPath = customerPath.replace('', '')
     customerPath = customerPath.split(' ')
-
+    print(customerPath)
     path = []
     for i in customerPath:
         if i != '':
@@ -280,6 +283,14 @@ def home():
     return render_template("home.html", username=username)
 
 
+# Route to homepage if ride is booked
+@auth.route('/homebooked', methods=['GET', 'POST'])
+@login_required
+def homebooked():
+    username = session['customerName']
+    return render_template("homebooked.html", username=username)
+
+
 # Route to book ride page
 @auth.route('/bookride', methods=['GET', 'POST'])
 @login_required
@@ -364,6 +375,11 @@ def confirmride():
 @login_required
 def rideDetails():
     if request.method == 'POST':
+        onRide = session['onRide']
+        print('test', onRide)
+        if onRide =='TRUE':
+            return redirect(url_for("auth.homebooked"))
+
         return redirect(url_for("auth.home"))
 
     startLocation = request.args.get('startLocation', None)
@@ -438,4 +454,5 @@ def updateDatabase(driverName, totalPath, customerName):
     db.session.query(drivertble).filter(drivertble.username == driverName).update({'isAvailable': 'DRIVING'})
     db.session.query(User).filter(User.username == customerName).update({'journeyRoute': str(totalPath)})
     db.session.query(User).filter(User.username == customerName).update({'onRide': 'TRUE'})
+    session['onRide']='TRUE'
     db.session.commit()
