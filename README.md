@@ -63,13 +63,13 @@ Design and implement an on-demand ride hailing application to allow user to requ
 3. Run the main.py
 
 4. Login credentials:
-      * Customer   
-        * Username: user1    
-        * Password: upass1
+      * Customers
+        * Username: xinyi, yoona, zora    
+        * Password: 1234
       
-      * Driver
-        * Username: driver1  
-        * Password: dpass1
+      * Drivers
+        * Username: alan, ben, charlie 
+        * Password: 1234
 
 # Features
 ### Account
